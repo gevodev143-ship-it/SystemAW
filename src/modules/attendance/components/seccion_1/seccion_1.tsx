@@ -11,7 +11,6 @@ interface Colaborador {
 }
 
 const Seccion_1 = () => {
-  const [clientes, setClientes] = useState<Colaborador[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({ nombre: "", cargo: "", dni: "" });
   const [qrListo, setQrListo] = useState(false);
@@ -66,12 +65,7 @@ const Seccion_1 = () => {
 
   const qrData = `Nombre: ${form.nombre}\nCargo: ${form.cargo}\nID: ${form.dni}`;
 
-  const getIniciales = (nombre: string) => {
-    const partes = nombre.trim().split(" ").filter(Boolean);
-    if (partes.length === 0) return "";
-    if (partes.length === 1) return partes[0].charAt(0);
-    return partes[0].charAt(0) + partes[1].charAt(0);
-  };
+
 
   return (
     <div className={style.seccion}>
