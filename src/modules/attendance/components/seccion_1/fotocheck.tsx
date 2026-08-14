@@ -55,7 +55,7 @@ const Fotocheck = forwardRef<HTMLDivElement, FotocheckProps>(
         </div>
 
         {/* Div 2: nombre, apellido y cargo */}
-        <div className={style.nameSection}>
+        <div >
           <h1 className={style.nombre}>{nombre}</h1>
           <h2 className={style.nombre}>{apellido}</h2>
           <p className={style.cargo}>
