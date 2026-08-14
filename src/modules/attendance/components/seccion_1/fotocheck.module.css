@@ -1,0 +1,146 @@
+.fotocheck {
+  width: 300px;
+  min-height: 480px;
+  background: #2258e0;
+  border-radius: 0px;
+  padding: 18px 18px 20px;
+  color: #fff;
+  font-family: "Arial", sans-serif;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.fotocheck hr {
+  border: none;
+  border-top: 3px solid #fff;
+  margin: 10px 0;
+}
+
+/* --- Div 1: logo + (sede/tienda/codigo/planilla | foto) --- */
+.topSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoHeader {
+  width: 130px;
+  object-fit: contain;
+  align-self: center;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.infoLeft {
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+.infoRight {
+  flex: 0 0 55%;
+  height: 160px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.foto {
+  width: 115px;
+  height: 100%;
+  min-height: 92px;
+  border-radius: 5px;
+  object-fit: cover;
+  margin-left: -10px;
+  background: #fff;
+}
+
+.infoBlock {
+  margin-bottom: 2px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #fff;
+}
+
+.label1 {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #fff;
+}
+
+.sede,
+.codigo {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* --- Div 2: nombre + cargo --- */
+.nameSection {
+}
+
+.nombre {
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.cargo {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  max-width: 120px;
+  line-height: 1.3;
+  color: #fff;
+}
+
+.cargoLinea {
+  display: block;
+}
+
+/* --- Div 3: qr | mascota --- */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 16px;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: flex-end;
+}
+
+.footerRight {
+  display: flex;
+  align-items: flex-end;
+}
+
+.qr {
+  background: #2258e0;
+  line-height: 0;
+}
+
+.logoFooter {
+  width: 94px;
+  object-fit: contain;
+}

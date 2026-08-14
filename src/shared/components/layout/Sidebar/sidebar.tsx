@@ -39,12 +39,12 @@ const Sidebar = () => {
           Asistencia
         </NavLink>
         <NavLink
-          to="/catalog"
+          to="/templates"
           className={({ isActive }) =>
             isActive ? `${style.link} ${style.linkActivo}` : style.link
           }
         >
-          Banner
+          Plantilla
         </NavLink>
 
         <p><b>Almacen</b></p>

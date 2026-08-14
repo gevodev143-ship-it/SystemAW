@@ -1,0 +1,82 @@
+.fotocheck {
+  width: 300px;
+  min-height: 480px;
+  background: linear-gradient(180deg, #1a3f9e 0%, #1a3f9e 100%);
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  font-family: "Arial", sans-serif;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.logoHeader {
+  width: 110px;
+  object-fit: contain;
+}
+
+.foto {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #fff;
+}
+
+.infoBlock {
+  margin-bottom: 8px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  margin: 4px 0 2px;
+  opacity: 0.9;
+}
+
+.sede,
+.codigo {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.nombre {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin: 8px 0 4px;
+}
+
+.cargo {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 16px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 20px;
+}
+
+.qr {
+  background: #fff;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.logoFooter {
+  width: 60px;
+  object-fit: contain;
+}

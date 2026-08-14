@@ -1,5 +1,9 @@
-import mapa from "./mapa.jpg";
+
+import logoGorrioncito from "./logogorrioncito.webp";
+import logoMascota from "./logomascota.png";
 
 export const images = {
-  mapa
+
+  logoGorrioncito,
+  logoMascota,
 };

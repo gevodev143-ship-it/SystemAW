@@ -7,6 +7,7 @@ import CatalogLayout from "../../shared/layouts/CatalogLayout";
 import CityLayout from "../../shared/layouts/CityLayout";
 import IconLayout from "../../shared/layouts/IconLayout";
 import AttendanceLayout from "../../shared/layouts/AttendanceLayout";
+import TemplateLayout from "../../shared/layouts/TemplateLayout";
 
 import LoginRoutes from "../../modules/login/routes/LoginRoutes";
 import HomeRoutes from "../../modules/home/routes/HomeRoutes";
@@ -15,6 +16,7 @@ import CatalogRoutes from "../../modules/catalog/routes/CatalogRoutes";
 import CityRoutes from "../../modules/city/routes/CityRoutes";
 import IconRoutes from "../../modules/icon/routes/IconRoutes";
 import AttendanceRoutes from "../../modules/attendance/routes/AttendanceRoutes";
+import TemplateRoutes from "../../modules/template/routes/TemplateRoutes";
 
 export default function AppRoutes() {
     return (
@@ -48,6 +50,10 @@ export default function AppRoutes() {
 
                 <Route element={<AttendanceLayout />}>
                     {AttendanceRoutes}
+                </Route>
+
+                <Route element={<TemplateLayout />}>
+                    {TemplateRoutes}
                 </Route>
 
                 {/* tenemos la pagina por defecto */}
