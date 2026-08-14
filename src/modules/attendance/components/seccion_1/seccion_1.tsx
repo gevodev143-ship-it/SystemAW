@@ -72,7 +72,7 @@ const Seccion_1 = () => {
     <div className={style.seccion}>
       <div className={style.toolbar}>
         <button className={style.btnAgregar} onClick={abrirModal}>
-          Agregar cliente
+          Agregar trabajador
         </button>
       </div>
 
@@ -82,7 +82,7 @@ const Seccion_1 = () => {
         <div className={style.overlay} onClick={cerrarModal}>
           <div className={style.modal} onClick={(e) => e.stopPropagation()}>
             <div className={style.modalHeader}>
-              <h2>Agregar cliente</h2>
+              <h2>Agregar trabajador</h2>
               <button className={style.btnCerrar} onClick={cerrarModal}>
                 Cerrar
               </button>
@@ -159,7 +159,7 @@ const Seccion_1 = () => {
                     Descargar PNG
                   </button>
                   <button className={style.btnPrimario} onClick={handleGuardar}>
-                    Guardar cliente
+                    Guardar trabajador
                   </button>
                 </div>
               </div>
