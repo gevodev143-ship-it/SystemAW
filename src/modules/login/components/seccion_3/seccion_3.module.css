@@ -1,0 +1,143 @@
+.seccion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+}
+
+.modal {
+  width: 100%;
+  max-width: 360px;
+  background: rgba(8, 8, 60, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.titulo {
+  font-family: Cambria, Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.separador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lineaIzq,
+.lineaDer {
+  display: block;
+  height: 1px;
+  width: 50px;
+  background: linear-gradient(to right, transparent, rgba(100, 255, 218, 0.5));
+}
+
+.lineaDer {
+  background: linear-gradient(to left, transparent, rgba(100, 255, 218, 0.5));
+}
+
+.diamante {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: #64ffda;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.bienvenido {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: 'Segoe UI', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.input:focus {
+  border-color: rgba(100, 255, 218, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.8rem;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Segoe UI', sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}

@@ -1,0 +1,302 @@
+.seccion {
+  padding: 5px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.btnAgregar {
+  background-color: #2b5aa0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btnAgregar:hover {
+  background-color: #234a85;
+}
+
+/* ---------- Tabla ---------- */
+.tabla {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.header,
+.fila {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 1.2fr 1fr 1fr;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header {
+  background-color: #f9f9f9;
+  font-weight: 600;
+  color: #555;
+}
+
+.header span {
+  padding: 10px 12px;
+  border-right: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.header span:last-child {
+  border-right: none;
+}
+
+.fila {
+  background-color: #fff;
+  padding: 10px 0;
+}
+
+.fila:last-child {
+  border-bottom: none;
+}
+
+.nombreCol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #eef2f8;
+  color: #2b5aa0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.nombre {
+  font-weight: 500;
+  color: #222;
+  margin: 0;
+}
+
+.celda {
+  text-align: center;
+  padding: 6px 12px;
+  border-right: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.celda:last-child {
+  border-right: none;
+}
+
+.marcaBadge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: #e8eef7;
+  color: #2b5aa0;
+}
+
+.sinResultados {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+
+.btnVer {
+  background: transparent;
+  border: 1px solid #2b5aa0;
+  color: #2b5aa0;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btnVer:hover {
+  background-color: #eef2f8;
+}
+
+/* ---------- Modal ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modalHeader h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+}
+
+.btnCerrar {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #555;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnCerrar:hover {
+  background-color: #f5f5f5;
+}
+
+.modalBody {
+  padding: 20px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.field input {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #222;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.field input:focus {
+  border-color: #2b5aa0;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.btnPrimario {
+  background-color: #2b5aa0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnPrimario:hover {
+  background-color: #234a85;
+}
+
+.btnSecundario {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 4px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnSecundario:hover {
+  background-color: #f5f5f5;
+}
+
+.infoBlock {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.rowData {
+  display: flex;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.k {
+  color: #888;
+  min-width: 60px;
+  font-weight: 600;
+}
+
+.v {
+  color: #222;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.qrWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}

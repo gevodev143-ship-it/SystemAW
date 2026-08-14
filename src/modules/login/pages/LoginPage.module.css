@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+}
+
+.seccion {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #07081a;
+  z-index: 0;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: sparkle 2.1s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}

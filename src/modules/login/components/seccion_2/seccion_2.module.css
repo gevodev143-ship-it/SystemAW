@@ -1,0 +1,144 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.seccion {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 0 3rem;
+  background-color: transparent;
+}
+
+/* ── Marca ── */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+}
+
+.logoBox {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.logoBox img {
+  width: 100%;
+  height: auto;
+}
+
+.marcaTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.marcaNombre {
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+
+.marcaSub {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Contenido ── */
+.contenido {
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64ffda;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0 0 0.6rem 0;
+}
+
+.titulo {
+  font-family: Cambria, Georgia, 'Times New Roman', serif;
+  font-size: 58px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.05;
+  margin: 0 0 1.6rem 0;
+  letter-spacing: -0.02em;
+}
+
+/* ── Separador ── */
+.separador {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.6rem;
+}
+
+.linea {
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: rgba(100, 255, 218, 0.4);
+}
+
+.diamante {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: #64ffda;
+  transform: rotate(45deg);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Descripción ── */
+.descripcion {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.75;
+  margin: 0 0 2.2rem 0;
+  max-width: 340px;
+}
+
+/* ── Badges ── */
+.badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 5px 14px;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(4px);
+}

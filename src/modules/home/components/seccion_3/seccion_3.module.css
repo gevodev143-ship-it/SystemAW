@@ -1,0 +1,10 @@
+    .circulo{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(
+        to bottom,
+        red 50%,
+        blue 50%
+    );
+}
