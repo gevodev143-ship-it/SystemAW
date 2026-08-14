@@ -13,6 +13,7 @@ interface Colaborador {
 const Seccion_1 = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({ nombre: "", cargo: "", dni: "" });
+  const [, setColaboradores] = useState<Colaborador[]>([]);
   const [qrListo, setQrListo] = useState(false);
   const qrWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +60,7 @@ const Seccion_1 = () => {
       dni: form.dni,
       fecha: new Date().toLocaleDateString("es-PE"),
     };
-    setClientes((prev) => [nuevo, ...prev]);
+    setColaboradores((prev) => [nuevo, ...prev]);
     cerrarModal();
   };
 

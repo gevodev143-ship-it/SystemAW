@@ -8,7 +8,7 @@ export interface Asistencia {
   asis_dni: string;
   asis_dato: string;
   asis_hora: string;
-  asis_fecha: string;
+  asis_fecha: string; 
 }
 
 const formatearHora = (hora: string) => {
