@@ -81,45 +81,7 @@ const Seccion_1 = () => {
         </button>
       </div>
 
-      <div className={style.tabla}>
-        <div className={style.header}>
-          <span>Nombre</span>
-          <span>Cargo</span>
-          <span>ID / DNI</span>
-          <span>Fecha</span>
-          <span>Acciones</span>
-        </div>
-
-        {clientes.length === 0 ? (
-          <div className={style.sinResultados}>No hay clientes registrados</div>
-        ) : (
-          clientes.map((c) => (
-            <div className={style.fila} key={c.id}>
-              <div className={style.nombreCol}>
-                <div className={style.avatar}>{getIniciales(c.nombre)}</div>
-                <p className={style.nombre}>{c.nombre}</p>
-              </div>
-              <div className={style.celda}>{c.cargo}</div>
-              <div className={style.celda}>
-                <span className={style.marcaBadge}>{c.dni}</span>
-              </div>
-              <div className={style.celda}>{c.fecha}</div>
-              <div className={style.celda}>
-                <button
-                  className={style.btnVer}
-                  onClick={() => {
-                    setForm({ nombre: c.nombre, cargo: c.cargo, dni: c.dni });
-                    setQrListo(true);
-                    setModalOpen(true);
-                  }}
-                >
-                  Ver QR
-                </button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+      
 
       {modalOpen && (
         <div className={style.overlay} onClick={cerrarModal}>
