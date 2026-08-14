@@ -2,6 +2,56 @@
   padding: 5px;
 }
 
+/* Buscador */
+.buscadorWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0 12px;
+  margin-bottom: 10px;
+  height: 38px;
+  max-width: 320px;
+}
+
+.buscadorIcono {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin-right: 8px;
+}
+
+.buscadorInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+  background: transparent;
+}
+
+.buscadorInput::placeholder {
+  color: #999;
+}
+
+.buscadorLimpiar {
+  border: none;
+  background: transparent;
+  color: #999;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0 0 6px;
+}
+
+.buscadorLimpiar:hover {
+  color: #555;
+}
+
+/* Tabla (igual que Sección 3) */
 .tabla {
   background-color: #fff;
   border: 1px solid #ccc;
