@@ -14,7 +14,7 @@ interface Colaborador {
 }
 
 const SEDES = ["Mazamari", "Satipo", "Pangoa"];
-const CARGOS = ["Cajera Comercial", "Chofer", "Repartidor"];
+const CARGOS = ["Cajera Comercial", "Chofer", "Repartidor", "Almacenero"];
 
 const Seccion_1 = () => {
   const [modalOpen, setModalOpen] = useState(false);
