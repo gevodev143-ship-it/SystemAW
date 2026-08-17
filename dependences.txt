@@ -2,3 +2,4 @@ npm install react-router-dom
 npm install @supabase/supabase-js
 npm install qrcode.react
 npm install html-to-image
+npm install exceljs

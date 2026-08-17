@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../../../lib/supabase";
 import style from "./seccion_3.module.css";
 import Modal from "./modal";
@@ -11,6 +11,8 @@ export interface Asistencia {
   asis_hora: string;
   asis_fecha: string; 
 }
+
+const REGISTROS_POR_PAGINA = 50;
 
 const formatearHora = (hora: string) => {
   // "13:07:00" -> "01:07:00 p. m."
@@ -31,19 +33,38 @@ const Seccion_3 = () => {
   const [cargando, setCargando] = useState(true);
   const [idEditar, setIdEditar] = useState<number | null>(null);
   const [idEliminando, setIdEliminando] = useState<number | null>(null);
+  const [paginaActual, setPaginaActual] = useState(1);
 
   const cargarRegistros = async () => {
     setCargando(true);
-    const { data, error } = await supabase
-      .from("asistencia")
-      .select("*")
-      .order("asis_marca_temporal", { ascending: false });
 
-    if (error) {
-      console.error("Error al cargar asistencia:", error);
-    } else {
-      setRegistros(data as Asistencia[]);
+    // Traemos todos los registros paginando internamente en bloques de 1000
+    // (límite por defecto de Supabase/PostgREST) hasta cubrir el total.
+    const TAMANO_LOTE = 1000;
+    let desde = 0;
+    let todos: Asistencia[] = [];
+
+    while (true) {
+      const { data, error } = await supabase
+        .from("asistencia")
+        .select("*")
+        .order("asis_marca_temporal", { ascending: false })
+        .range(desde, desde + TAMANO_LOTE - 1);
+
+      if (error) {
+        console.error("Error al cargar asistencia:", error);
+        break;
+      }
+
+      const lote = (data as Asistencia[]) ?? [];
+      todos = todos.concat(lote);
+
+      if (lote.length < TAMANO_LOTE) break;
+      desde += TAMANO_LOTE;
     }
+
+    setRegistros(todos);
+    setPaginaActual(1);
     setCargando(false);
   };
 
@@ -67,7 +88,24 @@ const Seccion_3 = () => {
       return;
     }
 
-    setRegistros((prev) => prev.filter((r) => r.asis_id !== id));
+    setRegistros((prev) => {
+      const nuevos = prev.filter((r) => r.asis_id !== id);
+      const totalPaginas = Math.max(1, Math.ceil(nuevos.length / REGISTROS_POR_PAGINA));
+      setPaginaActual((pagina) => Math.min(pagina, totalPaginas));
+      return nuevos;
+    });
+  };
+
+  const totalPaginas = Math.max(1, Math.ceil(registros.length / REGISTROS_POR_PAGINA));
+
+  const registrosPagina = useMemo(() => {
+    const inicio = (paginaActual - 1) * REGISTROS_POR_PAGINA;
+    return registros.slice(inicio, inicio + REGISTROS_POR_PAGINA);
+  }, [registros, paginaActual]);
+
+  const irAPagina = (pagina: number) => {
+    const destino = Math.min(Math.max(pagina, 1), totalPaginas);
+    setPaginaActual(destino);
   };
 
   return (
@@ -89,7 +127,7 @@ const Seccion_3 = () => {
           <p className={style.sinResultados}>No se encontraron resultados</p>
         )}
 
-        {!cargando && registros.map((r) => (
+        {!cargando && registrosPagina.map((r) => (
           <div key={r.asis_id} className={style.fila}>
             <div className={style.nombreCol}>
               <div className={style.avatar}>
@@ -148,6 +186,32 @@ const Seccion_3 = () => {
         ))}
 
       </section>
+
+      {!cargando && registros.length > 0 && (
+        <div className={style.paginacion}>
+          <button
+            type="button"
+            className={style.btnPagina}
+            onClick={() => irAPagina(paginaActual - 1)}
+            disabled={paginaActual === 1}
+          >
+            Anterior
+          </button>
+
+          <span className={style.infoPagina}>
+            Página {paginaActual} de {totalPaginas} ({registros.length} registros)
+          </span>
+
+          <button
+            type="button"
+            className={style.btnPagina}
+            onClick={() => irAPagina(paginaActual + 1)}
+            disabled={paginaActual === totalPaginas}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
 
       {idEditar !== null && (
         <Modal
