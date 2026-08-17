@@ -4,21 +4,26 @@ import { images } from "../../../../assets/img";
 
 interface FotocheckTraseraProps {
   telefono: string;
+  dni: string;
 }
 
 const FotocheckTrasera = forwardRef<HTMLDivElement, FotocheckTraseraProps>(
-  ({ telefono }, ref) => {
+  ({ telefono,dni }, ref) => {
     return (
       <div ref={ref} className={style.fotocheck}>
-        <div>
+        <div className={style.imagen}>
           <img
-            src={images.logoGorrioncito}
+            src={images.logo_parte_trasera}
             alt="Ferretería Gorrioncito"
             className={style.logoHeader}
           />
         </div>
+        <div>
+          <p className={style.telefono}>DNI{dni}</p>
+          <p className={style.telefono}>TLF{telefono}</p>
+        </div>
          
-        <p className={style.telefono}>{telefono}</p>
+        
       </div>
     );
   }
