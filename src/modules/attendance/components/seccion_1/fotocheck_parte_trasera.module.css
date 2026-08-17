@@ -4,7 +4,7 @@
   background: #fff;
   border-radius: 0px;
   padding: 18px 18px 20px;
-  color: #222;
+  
   font-family: "Arial", sans-serif;
   box-sizing: border-box;
   position: relative;
@@ -29,4 +29,40 @@ flex-direction: column;
     display: flex;
     
     justify-content: center;
+}
+.bloque{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.bloque .titulo{
+    display: flex;
+    margin-right: 5px;
+}
+
+hr{
+  border: 1px solid black;
+}
+
+
+
+.datoFila {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 3px 0;
+}
+ 
+.datoEtiqueta {
+  
+  font-weight: 700;
+  color: #222;
+}
+ 
+.datoValor {
+
+  font-weight: 700;
+  color: #222;
 }

@@ -262,6 +262,7 @@ const Seccion_1 = () => {
                 <FotocheckTrasera
                   ref={fotocheckTraseraRef}
                   telefono={form.telefono}
+                  dni={form.dni}
                 />
 
                 <div className={style.modalActions}>

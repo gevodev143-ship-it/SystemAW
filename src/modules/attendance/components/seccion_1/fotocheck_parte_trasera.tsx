@@ -8,7 +8,7 @@ interface FotocheckTraseraProps {
 }
 
 const FotocheckTrasera = forwardRef<HTMLDivElement, FotocheckTraseraProps>(
-  ({ telefono,dni }, ref) => {
+  ({ telefono, dni }, ref) => {
     return (
       <div ref={ref} className={style.fotocheck}>
         <div className={style.imagen}>
@@ -18,28 +18,54 @@ const FotocheckTrasera = forwardRef<HTMLDivElement, FotocheckTraseraProps>(
             className={style.logoHeader}
           />
         </div>
-        <br />
-        
-        <div>
-          <hr />
-          <div>
-            <p><b>Misión</b></p>
-            <p>Brindar productos de ferreteria de calidad y soluciones practicas ,con atencion cercana y confiable a nuestros clientes.</p>
-          </div>
-          <hr />
-          <div>
-            <p><b>Visión</b></p>
-            <p>Ser la ferreteria de referencia en la region ,destacando por la calidas ,servicio y soluciones innovadoras.</p>
-          </div>
-          <div>
 
+        <div className={style.contenido}>
+          <hr />
+          <div className={style.bloque}>
+            <p className={style.titulo}><b>Misión</b></p>
+            <p className={style.texto}>
+              Brindar productos de ferretería de calidad y soluciones prácticas, con atención
+              cercana y confiable a nuestros clientes.
+            </p>
+            <br />
           </div>
           <hr />
-          <p className={style.telefono}>DNI{dni}</p>
-          <p className={style.telefono}>TLF{telefono}</p>
+          <div className={style.bloque}>
+            <p className={style.titulo}><b>Visión</b></p>
+            <p className={style.texto}>
+              Ser la ferretería de referencia en la región, destacando por la calidad, servicio y
+              soluciones innovadoras.
+            </p>            
+            <br />
+          </div>
+          <hr />
+          <div className={style.bloque}>
+            <p className={style.titulo}><b>Valores</b></p>
+            <p className={style.texto}>
+              &gt; Integridad
+              <br />
+              &gt; Compromiso
+              <br />
+              &gt; Servicio
+            </p>
+            <p className={style.texto}>
+              &gt; Confianza
+              <br />
+              &gt; Calidad
+              <br />
+              &gt; Innovación
+            </p>
+          </div>
+          <hr />
+          <div className={style.datoFila}>
+            <span className={style.datoEtiqueta}>DNI</span>
+            <span className={style.datoValor}>{dni}</span>
+          </div>
+          <div className={style.datoFila}>
+            <span className={style.datoEtiqueta}>TLF</span>
+            <span className={style.datoValor}>{telefono}</span>
+          </div>
         </div>
-         
-        
       </div>
     );
   }
