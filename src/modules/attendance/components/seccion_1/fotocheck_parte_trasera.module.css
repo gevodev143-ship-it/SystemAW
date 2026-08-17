@@ -2,67 +2,108 @@
   width: 300px;
   min-height: 480px;
   background: #fff;
-  border-radius: 0px;
-  padding: 18px 18px 20px;
+  border: 3px solid #f7f7f7;
   
+  padding: 16px 16px 18px;
+  color: #222;
   font-family: "Arial", sans-serif;
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
-flex-direction: column;
+
   display: flex;
-  
-
-
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  flex-direction: column;
 }
 
-.telefono {
+.imagen {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.contenido {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.logoHeader {
+  width: 240px;
+  object-fit: contain;
+}
+
+hr {
+  border: none;
+  border-top: 3px solid #000;
+  margin: 8px 0;
+}
+
+/* Cada bloque (Misión / Visión / Valores): etiqueta a la izq. en columna fija,
+   contenido a la derecha, todos alineados en la misma X */
+.bloque {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  column-gap: 8px;
+  align-items: start;
+  margin-bottom: 2px;
+}
+
+.titulo {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.texto {
+  font-size: 11px;
+  line-height: 1.35;
+  margin: 0 0 4px;
+  color: #111;
+}
+
+/* Fila de Valores: dos columnas de items lado a lado dentro del área de contenido */
+.valoresFila {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+}
+
+/* DNI / TLF: misma rejilla que .bloque para que el valor arranque
+   exactamente en la misma X que el texto de Misión/Visión */
+.datoFila {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  
+  margin: 3px 0;
+}
+
+.datoEtiqueta {
   font-size: 15px;
   font-weight: 700;
   color: #222;
-  margin: 0;
-  text-align: center;
 }
 
-.imagen{
-    display: flex;
-    
-    justify-content: center;
-}
-.bloque{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.bloque .titulo{
-    display: flex;
-    margin-right: 5px;
-}
-
-hr{
-  border: 1px solid black;
-}
-
-
-
-.datoFila {
+.datoValor {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 3px 0;
-}
- 
-.datoEtiqueta {
-  
+  justify-content: end;
+  font-size: 15px;
   font-weight: 700;
   color: #222;
 }
- 
-.datoValor {
 
+.datoEtiqueta1 {
+  font-size: 15px;
+  display: flex;
+  justify-content: start;
+  font-weight: 700;
+  color: #222;
+}
+
+.datoValor1 {
+  display: flex;
+  justify-content: end;
+  font-size: 15px;
   font-weight: 700;
   color: #222;
 }
