@@ -27,5 +27,6 @@ flex-direction: column;
 
 .imagen{
     display: flex;
-    margin-left: 10px;
+    
+    justify-content: center;
 }
