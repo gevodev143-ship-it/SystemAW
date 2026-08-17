@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
 import Fotocheck from "./fotocheck";
+import FotocheckTrasera from "./fotocheck_parte_trasera";
 import style from "./seccion_1.module.css";
 
 interface Colaborador {
@@ -9,12 +10,13 @@ interface Colaborador {
   apellido: string;
   cargo: string;
   dni: string;
+  telefono: string;
   sede: string;
   fecha: string;
 }
 
 const SEDES = ["Mazamari", "Satipo", "Pangoa"];
-const CARGOS = ["Cajera Comercial", "Chofer", "Repartidor", "Almacenero"];
+const CARGOS = ["Cajera Comercial", "Chofer", "Repartidor", "Almacenero","Despachador","Ayudante de Reparto"];
 
 const Seccion_1 = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -23,15 +25,17 @@ const Seccion_1 = () => {
     apellido: "",
     cargo: "",
     dni: "",
+    telefono: "",
     sede: "",
   });
   const [foto, setFoto] = useState<string | null>(null);
   const [, setColaboradores] = useState<Colaborador[]>([]);
   const [qrListo, setQrListo] = useState(false);
   const fotocheckRef = useRef<HTMLDivElement>(null);
+  const fotocheckTraseraRef = useRef<HTMLDivElement>(null);
 
   const abrirModal = () => {
-    setForm({ nombre: "", apellido: "", cargo: "", dni: "", sede: "" });
+    setForm({ nombre: "", apellido: "", cargo: "", dni: "", telefono: "", sede: "" });
     setFoto(null);
     setQrListo(false);
     setModalOpen(true);
@@ -63,24 +67,39 @@ const Seccion_1 = () => {
   };
 
   const handleGenerar = () => {
-    if (!form.nombre || !form.apellido || !form.cargo || !form.dni || !form.sede) {
-      alert("Por favor completa todos los campos: Sede, Nombre, Apellido, Cargo e ID.");
+    if (!form.nombre || !form.apellido || !form.cargo || !form.dni || !form.telefono || !form.sede) {
+      alert("Por favor completa todos los campos: Sede, Nombre, Apellido, Cargo, ID y Teléfono.");
       return;
     }
     setQrListo(true);
   };
 
+  const descargarAmbasCaras = async () => {
+    if (!fotocheckRef.current || !fotocheckTraseraRef.current) return;
+
+    const dataUrlFrente = await toPng(fotocheckRef.current, {
+      pixelRatio: 3,
+      cacheBust: true,
+    });
+    const dataUrlTrasera = await toPng(fotocheckTraseraRef.current, {
+      pixelRatio: 3,
+      cacheBust: true,
+    });
+
+    const aFrente = document.createElement("a");
+    aFrente.download = `Fotocheck_${form.dni || "trabajador"}_frente.png`;
+    aFrente.href = dataUrlFrente;
+    aFrente.click();
+
+    const aTrasera = document.createElement("a");
+    aTrasera.download = `Fotocheck_${form.dni || "trabajador"}_reverso.png`;
+    aTrasera.href = dataUrlTrasera;
+    aTrasera.click();
+  };
+
   const handleDescargar = async () => {
-    if (!fotocheckRef.current) return;
     try {
-      const dataUrl = await toPng(fotocheckRef.current, {
-        pixelRatio: 3, // mayor resolución, sin perder calidad
-        cacheBust: true,
-      });
-      const a = document.createElement("a");
-      a.download = `Fotocheck_${form.dni || "trabajador"}.png`;
-      a.href = dataUrl;
-      a.click();
+      await descargarAmbasCaras();
     } catch (err) {
       console.error("Error al generar la imagen del fotocheck:", err);
       alert("No se pudo generar la imagen. Intenta nuevamente.");
@@ -88,13 +107,8 @@ const Seccion_1 = () => {
   };
 
   const handleGuardar = async () => {
-    if (!fotocheckRef.current) return;
-
     try {
-      const dataUrl = await toPng(fotocheckRef.current, {
-        pixelRatio: 3, // mayor resolución, sin perder calidad
-        cacheBust: true,
-      });
+      await descargarAmbasCaras();
 
       const nuevo: Colaborador = {
         id: crypto.randomUUID(),
@@ -102,16 +116,11 @@ const Seccion_1 = () => {
         apellido: form.apellido,
         cargo: form.cargo,
         dni: form.dni,
+        telefono: form.telefono,
         sede: form.sede,
         fecha: new Date().toLocaleDateString("es-PE"),
       };
       setColaboradores((prev) => [nuevo, ...prev]);
-
-      // descarga automática de la imagen completa del fotocheck al guardar
-      const a = document.createElement("a");
-      a.download = `Fotocheck_${form.dni || "trabajador"}.png`;
-      a.href = dataUrl;
-      a.click();
 
       cerrarModal();
     } catch (err) {
@@ -206,6 +215,17 @@ const Seccion_1 = () => {
                 </div>
 
                 <div className={style.field}>
+                  <label>Teléfono</label>
+                  <input
+                    type="text"
+                    placeholder="Ej: 987654321"
+                    maxLength={20}
+                    value={form.telefono}
+                    onChange={(e) => handleChange("telefono", e.target.value)}
+                  />
+                </div>
+
+                <div className={style.field}>
                   <label>Foto del trabajador</label>
                   <input type="file" accept="image/*" onChange={handleFotoChange} />
                   {foto && (
@@ -237,6 +257,11 @@ const Seccion_1 = () => {
                   sede={form.sede}
                   foto={foto}
                   qrData={qrData}
+                />
+
+                <FotocheckTrasera
+                  ref={fotocheckTraseraRef}
+                  telefono={form.telefono}
                 />
 
                 <div className={style.modalActions}>
