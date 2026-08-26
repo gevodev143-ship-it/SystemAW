@@ -9,6 +9,7 @@
 }
 
 /* --- Logo --- */
+
 .seccion1 {
   display: flex;
   align-items: center;
@@ -32,6 +33,7 @@
 }
 
 /* --- Navegación --- */
+
 .seccion2 {
   flex: 1;
   display: flex;
@@ -58,6 +60,7 @@
 }
 
 /* --- Links --- */
+
 .link {
   display: flex;
   align-items: center;
@@ -70,7 +73,10 @@
   color: #555;
   text-decoration: none;
   border: 1px solid transparent;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .link:hover {
@@ -92,7 +98,8 @@
   color: #2b5aa0;
 }
 
-/* Scrollbar discreto */
+/* --- Scrollbar discreto --- */
+
 .seccion2::-webkit-scrollbar {
   width: 6px;
 }
@@ -104,4 +111,48 @@
 
 .seccion2::-webkit-scrollbar-track {
   background-color: transparent;
+}
+
+/* --- Título de sección --- */
+
+.tituloSeccion {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* --- Icono maleta --- */
+
+.iconMaleta {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+/* --- Botón de la flecha --- */
+
+.botonArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* --- Flecha --- */
+
+.iconArrowDown {
+  width: 16px;
+  height: 16px;
+  color: #000;
+  transition: transform 0.2s ease;
+}
+
+/* Flecha cuando el menú está abierto */
+
+.iconArrowDownOpen {
+  transform: rotate(180deg);
 }

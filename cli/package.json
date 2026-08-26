@@ -1,0 +1,28 @@
+{
+  "name": "system-aw-cli",
+  "version": "1.0.0",
+  "description": "CLI oficial para System AW",
+  "type": "module",
+  "bin": {
+    "saw": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": [
+    "system-aw",
+    "cli",
+    "generator"
+  ],
+  "author": "Aera Systems",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.3.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,138 +1,327 @@
-import { useEffect, useRef } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import style from "./seccion_1.module.css";
+import { supabase } from "../../../../lib/supabase";
 
 const Seccion_1 = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const navigate = useNavigate();
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const cx = canvas.getContext("2d")!;
-    let animId: number;
-    let t = 0;
+  // Formulario de login
+  const [loginCorreo, setLoginCorreo] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
 
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
+  // Formulario de registro
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [correoError, setCorreoError] = useState(false);
 
-    type Stop = [number, string];
+  // Modal de éxito (registro)
+  const [showModal, setShowModal] = useState(false);
 
-    const wave = (
-      yBase: number,
-      amp: number,
-      freq: number,
-      phase: number,
-      stops: Stop[],
-      lineW: number,
-      blur: number
-    ) => {
-      cx.save();
-      cx.filter = `blur(${blur}px)`;
-      const grad = cx.createLinearGradient(0, 0, canvas.width, 0);
-      stops.forEach(([s, c]) => grad.addColorStop(s, c));
-      cx.strokeStyle = grad;
-      cx.lineWidth = lineW;
-      cx.lineCap = "round";
-      cx.beginPath();
-      for (let x = 0; x <= canvas.width; x += 2) {
-        const y =
-          yBase +
-          Math.sin(x * freq + phase + t) * amp +
-          Math.sin(x * freq * 0.5 + phase * 1.3 + t * 0.7) * amp * 0.4;
-        x === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y);
+  // Modal de elección de modo (cuando ambos flags son null/false)
+  const [showChoice, setShowChoice] = useState(false);
+  const [pendingCustId, setPendingCustId] = useState<number | null>(null);
+  const [choiceLoading, setChoiceLoading] = useState<"personal" | "business" | null>(null);
+
+  const handleLogin = async () => {
+    setLoginError("");
+
+    if (!loginCorreo.trim() || !loginPassword) {
+      setLoginError("Ingresa tu correo y contraseña.");
+      return;
+    }
+
+    setLoginLoading(true);
+    try {
+      // 1. Verificar credenciales contra Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: loginCorreo.trim().toLowerCase(),
+        password: loginPassword,
+      });
+
+      if (authError || !authData.user) {
+        setLoginError("Correo o contraseña incorrectos.");
+        return;
       }
-      cx.stroke();
-      cx.restore();
-    };
 
-    const draw = () => {
-      const w = canvas.width;
-      const h = canvas.height;
-      cx.clearRect(0, 0, w, h);
+      // 2. Buscar al cliente asociado a ese usuario de auth
+      const { data: customer, error: customerError } = await supabase
+        .from("customers")
+        .select("cust_id, cust_personal_development, cust_business_management")
+        .eq("cust_auth_id", authData.user.id)
+        .maybeSingle();
 
-      // Fondo radial azul — color principal del logo
-      const bg = cx.createRadialGradient(w * 0.25, h * 0.5, 0, w * 0.25, h * 0.5, w * 0.75);
-      bg.addColorStop(0, "rgba(26,111,219,0.35)");
-      bg.addColorStop(0.5, "rgba(107,45,232,0.15)");
-      bg.addColorStop(1, "rgba(6,1,31,0)");
-      cx.fillStyle = bg;
-      cx.fillRect(0, 0, w, h);
+      if (customerError || !customer) {
+        setLoginError("No se encontró una cuenta de cliente asociada a este usuario.");
+        return;
+      }
 
-      // Resplandor naranja — como el punto del logo
-      const og = cx.createRadialGradient(w * 0.78, h * 0.22, 0, w * 0.78, h * 0.22, w * 0.3);
-      og.addColorStop(0, "rgba(240,90,26,0.18)");
-      og.addColorStop(1, "rgba(240,90,26,0)");
-      cx.fillStyle = og;
-      cx.fillRect(0, 0, w, h);
+      const { cust_id, cust_personal_development, cust_business_management } = customer;
 
-      // Onda principal — azul → naranja → violeta
-      wave(h * 0.44, h * 0.13, 0.008, 0, [
-        [0,    "rgba(26,111,219,0)"],
-        [0.12, "rgba(26,111,219,0.2)"],
-        [0.32, "rgba(240,90,26,0.95)"],
-        [0.52, "rgba(255,160,40,1)"],
-        [0.72, "rgba(107,45,232,0.85)"],
-        [1,    "rgba(50,0,150,0)"],
-      ], 26, 18);
+      // 3. Reglas de redirección
+      if (cust_business_management === true) {
+        navigate("/staffs");
+        return;
+      }
 
-      // Onda secundaria — violeta a naranja
-      wave(h * 0.48, h * 0.11, 0.009, 1.2, [
-        [0,   "rgba(107,45,232,0)"],
-        [0.2, "rgba(240,90,26,0.65)"],
-        [0.45,"rgba(255,170,50,0.9)"],
-        [0.7, "rgba(107,45,232,0.6)"],
-        [1,   "rgba(26,111,219,0)"],
-      ], 10, 8);
+      if (cust_personal_development === true) {
+        navigate("/habits");
+        return;
+      }
 
-      // Onda tenue superior — azul claro
-      wave(h * 0.34, h * 0.09, 0.01, 0.5, [
-        [0,    "rgba(26,111,219,0)"],
-        [0.25, "rgba(80,160,255,0.35)"],
-        [0.55, "rgba(26,111,219,0.2)"],
-        [1,    "rgba(26,111,219,0)"],
-      ], 4, 4);
+      // Ambos son null/false: dejar que el usuario elija su modo
+      setPendingCustId(cust_id);
+      setShowChoice(true);
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
-      // Onda inferior — violeta
-      wave(h * 0.58, h * 0.08, 0.007, 2.5, [
-        [0,   "rgba(107,45,232,0)"],
-        [0.3, "rgba(150,60,255,0.5)"],
-        [0.6, "rgba(240,90,26,0.35)"],
-        [1,   "rgba(80,0,200,0)"],
-      ], 5, 3);
+  const persistJwtSession = async () => {
+    // Asegura que el JWT de la sesión activa quede disponible para las
+    // siguientes pantallas (/habits, /staffs).
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (sessionData.session) {
+      localStorage.setItem("aw_erp_jwt", sessionData.session.access_token);
+    }
+  };
 
-      // Onda fina naranja — acento
-      wave(h * 0.62, h * 0.06, 0.011, 3.1, [
-        [0,   "rgba(240,90,26,0)"],
-        [0.4, "rgba(255,130,30,0.3)"],
-        [0.7, "rgba(240,90,26,0.2)"],
-        [1,   "rgba(200,60,0,0)"],
-      ], 2, 2);
+  const handleChoosePersonalDevelopment = async () => {
+    if (!pendingCustId) return;
+    setChoiceLoading("personal");
+    try {
+      const { error } = await supabase
+        .from("customers")
+        .update({ cust_personal_development: true })
+        .eq("cust_id", pendingCustId);
 
-      t += 0.012;
-      animId = requestAnimationFrame(draw);
-    };
+      if (error) {
+        setLoginError("No se pudo guardar tu preferencia. Intenta de nuevo.");
+        return;
+      }
 
-    draw();
+      await persistJwtSession();
+      setShowChoice(false);
+      navigate("/habits");
+    } finally {
+      setChoiceLoading(null);
+    }
+  };
 
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
+  const handleChooseBusinessManagement = async () => {
+    if (!pendingCustId) return;
+    setChoiceLoading("business");
+    try {
+      const { error } = await supabase
+        .from("customers")
+        .update({ cust_business_management: true })
+        .eq("cust_id", pendingCustId);
+
+      if (error) {
+        setLoginError("No se pudo guardar tu preferencia. Intenta de nuevo.");
+        return;
+      }
+
+      await persistJwtSession();
+      setShowChoice(false);
+      navigate("/staffs");
+    } finally {
+      setChoiceLoading(null);
+    }
+  };
+
+  const handleCrearCuenta = async () => {
+    const correoNormalizado = correo.trim().toLowerCase();
+    setLoading(true);
+
+    // 1. Verifica si el correo ya existe en auth.users
+    const { data: existe, error: rpcError } = await supabase.rpc(
+      "verificar_correo_existente",
+      { correo_input: correoNormalizado }
+    );
+
+    if (rpcError) {
+      console.error(rpcError);
+      setLoading(false);
+      return;
+    }
+
+    if (existe) {
+      setCorreoError(true);
+      setLoading(false);
+      return;
+    }
+
+    // 2. Guarda la solicitud de registro
+    const { error: insertError } = await supabase.from("registration_request").insert({
+      rgrequest_name: nombre,
+      rgrequest_lastname: apellido,
+      rgrequest_email_momentaneo: correoNormalizado,
+    });
+
+    setLoading(false);
+
+    if (insertError) {
+      // por si alguien mandó el mismo correo justo entre el chequeo y el insert
+      if (insertError.code === "23505") {
+        setCorreoError(true);
+      } else {
+        console.error(insertError);
+      }
+      return;
+    }
+
+    setCorreoError(false);
+    setShowModal(true);
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 3000);
+  };
 
   return (
     <div className={style.seccion}>
-      <canvas ref={canvasRef} className={style.canvas} />
-      <div className={style.sparkle} style={{ top: "38%", left: "22%", animationDelay: "0.3s" }} />
-      <div className={style.sparkle} style={{ top: "55%", left: "48%", animationDelay: "0.9s", animationDuration: "2.8s" }} />
-      <div className={style.sparkle} style={{ top: "30%", left: "65%", animationDelay: "1.5s", animationDuration: "1.9s" }} />
-      <div className={style.sparkle} style={{ top: "70%", left: "80%", background: "#f05a1a", animationDelay: "0.1s", animationDuration: "2.4s" }} />
-      <div className={style.sparkle} style={{ top: "20%", left: "10%", background: "#1a6fdb", animationDelay: "0.6s", animationDuration: "3.1s" }} />
-      <div className={style.sparkle} style={{ top: "15%", left: "55%", background: "#6b2de8", animationDelay: "1.2s", animationDuration: "2.2s" }} />
-      <div className={style.sparkle} style={{ top: "80%", left: "35%", background: "#f05a1a", animationDelay: "0.4s", animationDuration: "2.7s" }} />
+      <div className={style.escenario}>
+        <div className={`${style.tarjeta} ${isFlipped ? style.volteada : ""}`}>
+
+          {/* Cara frontal: Login */}
+          <div className={`${style.cara} ${style.frente}`}>
+            <h2 className={style.titulo}>Login</h2>
+
+            <label className={style.label}>Correo Electrónico</label>
+            <input
+              type="email"
+              className={style.input}
+              value={loginCorreo}
+              onChange={(e) => {
+                setLoginCorreo(e.target.value);
+                if (loginError) setLoginError("");
+              }}
+            />
+
+            <label className={style.label}>Contraseña</label>
+            <input
+              type="password"
+              className={style.input}
+              value={loginPassword}
+              onChange={(e) => {
+                setLoginPassword(e.target.value);
+                if (loginError) setLoginError("");
+              }}
+            />
+
+            {loginError && <span className={style.textoError}>{loginError}</span>}
+
+            <span className={style.enlace} onClick={() => setIsFlipped(true)}>
+              ¿crear cuenta?
+            </span>
+
+            <button className={style.boton} onClick={handleLogin} disabled={loginLoading}>
+              {loginLoading ? "Ingresando..." : "Entrar"}
+            </button>
+          </div>
+
+          {/* Cara trasera: Crear cuenta */}
+          <div className={`${style.cara} ${style.reverso}`}>
+            <div className={style.encabezadoReverso}>
+              <h2 className={style.titulo}>Formulario</h2>
+              <span className={style.cerrar} onClick={() => setIsFlipped(false)}>
+                X
+              </span>
+            </div>
+
+            <label className={style.label}>Nombre</label>
+            <input
+              type="text"
+              className={style.input}
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+            />
+
+            <label className={style.label}>Apellido</label>
+            <input
+              type="text"
+              className={style.input}
+              value={apellido}
+              onChange={(e) => setApellido(e.target.value)}
+            />
+
+            <label className={style.label}>Correo Electrónico</label>
+            <input
+              type="email"
+              className={`${style.input} ${correoError ? style.inputError : ""}`}
+              value={correo}
+              onChange={(e) => {
+                setCorreo(e.target.value);
+                if (correoError) setCorreoError(false);
+              }}
+            />
+            {correoError && (
+              <span className={style.textoError}>
+                Ese correo ya ha sido registrado
+              </span>
+            )}
+
+            <span className={style.enlace} onClick={() => setIsFlipped(false)}>
+              ya tengo cuenta
+            </span>
+
+            <button className={style.boton} onClick={handleCrearCuenta} disabled={loading}>
+              {loading ? "Enviando..." : "Crear cuenta"}
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Modal de éxito (registro) */}
+      {showModal && (
+        <div className={style.modalOverlay}>
+          <div className={style.modalContenido}>
+            <svg className={style.check} viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+              <circle className={style.checkCirculo} cx="26" cy="26" r="24" fill="none" />
+              <path className={style.checkPalomita} fill="none" d="M14 27l7 7 16-16" />
+            </svg>
+            <p className={style.modalTexto}>
+              Se le enviaron las credenciales al correo <strong>{correo}</strong> para
+              que pueda ingresar al System AW ERP. Puede cambiar las credenciales
+              dentro del sistema.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de elección de modo */}
+      {showChoice && (
+        <div className={style.modalOverlay}>
+          <div className={style.modalContenido}>
+            <p className={style.modalTexto}>¿Qué modo quieres usar?</p>
+            <div className={style.opcionesModo}>
+              <div
+                className={style.opcionModo}
+                onClick={() => {
+                  if (!choiceLoading) handleChoosePersonalDevelopment();
+                }}
+              >
+                {choiceLoading === "personal" ? "Cargando..." : "Desarrollo Personal"}
+              </div>
+              <div
+                className={style.opcionModo}
+                onClick={() => {
+                  if (!choiceLoading) handleChooseBusinessManagement();
+                }}
+              >
+                {choiceLoading === "business" ? "Cargando..." : "Gestión Empresarial"}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

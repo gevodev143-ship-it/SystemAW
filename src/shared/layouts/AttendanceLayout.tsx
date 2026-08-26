@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/layout/Sidebar/sidebar2";
+import Sidebar from "../components/layout/Sidebar/sidebar";
 import BarraSuperior from "../components/layout/BarraSuperior/BarraSuperior";
 
 export default function ListaTrabajadoresLayout() {

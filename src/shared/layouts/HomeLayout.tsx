@@ -1,16 +1,32 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/layout/Sidebar/sidebar";
-import BarraSuperior from "../components/layout/BarraSuperior/BarraSuperior";
+import BarraInferior from "../components/layout/BarraInferior/BarraInferior";
 
 export default function HomeLayout() {
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-   
-      <Sidebar />
-      <main style={{ flex: 1, overflow: "auto" }}>
-           <BarraSuperior />
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        margin: 0,
+        padding: 0,
+        overflow: "auto",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE/Edge
+      }}
+    >
+      <style>
+        {`
+          div::-webkit-scrollbar {
+            display: none;
+          }
+        `}
+      </style>
+
+      <main style={{ width: "100%", height: "100%" }}>
         <Outlet />
+        <BarraInferior/>
       </main>
+      
     </div>
   );
-}
+}     

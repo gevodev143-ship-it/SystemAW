@@ -13,6 +13,7 @@ import { iconUser } from "./user";
 import { iconLock } from "./lock";
 import { iconSuma } from "./suma";
 import { iconLoading } from "./loading";
+import { iconMaleta } from "./Maleta";
 
 export const icon = {
   iconHojaPaper,
@@ -29,5 +30,6 @@ export const icon = {
   iconUser,
   iconLock,
   iconSuma,
-  iconLoading
+  iconLoading,
+  iconMaleta
 };

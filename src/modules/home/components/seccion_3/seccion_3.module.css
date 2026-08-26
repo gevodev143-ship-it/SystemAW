@@ -1,10 +1,39 @@
-    .circulo{
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: linear-gradient(
-        to bottom,
-        red 50%,
-        blue 50%
-    );
+.seccion {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.titulo {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.gorrioncito {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+}
+
+.imagen {
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.imagen img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+}
+
+p {
+    margin: 0;
+    text-align: left;
+    line-height: 1.5;
+    font-size: 14px;
 }

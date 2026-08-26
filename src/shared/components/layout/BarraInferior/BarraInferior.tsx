@@ -4,7 +4,7 @@ const BarraInferior = () => {
 
   return (
     <footer className={style.footer}>
-     
+     <p>fsd</p>
     </footer>
   );
 };

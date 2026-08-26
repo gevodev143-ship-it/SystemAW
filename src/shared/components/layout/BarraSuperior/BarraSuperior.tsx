@@ -12,7 +12,7 @@ export default function BarraSuperior() {
       <div className={style.logo}>
         <img src="/logo.png" alt="" />
       </div>
-      <p>Jose David</p>
+      <p>David Jhunior</p>
     </div>
   );
 }
