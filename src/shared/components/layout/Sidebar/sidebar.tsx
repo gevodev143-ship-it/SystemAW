@@ -8,16 +8,29 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
-  const [canPersonalDevelopment, setCanPersonalDevelopment] = useState(false);
-  const [canBusinessManagement, setCanBusinessManagement] = useState(false);
 
-  // Controla si Gestión Empresarial está desplegado
-  const [businessManagementOpen, setBusinessManagementOpen] = useState(true);
+  const [canPersonalDevelopment, setCanPersonalDevelopment] =
+    useState(false);
+
+  const [canBusinessManagement, setCanBusinessManagement] =
+    useState(false);
+
+  // Estados de los menús desplegables
+  const [businessManagementOpen, setBusinessManagementOpen] =
+    useState(true);
+
+  const [extensionsOpen, setExtensionsOpen] =
+    useState(false);
+
+  const [digitalManagementOpen, setDigitalManagementOpen] =
+    useState(false);
 
   useEffect(() => {
     const cargarPermisos = async () => {
       // 1. Verificar que haya una sesión activa
-      const { data: sessionData } = await supabase.auth.getSession();
+      const { data: sessionData } =
+        await supabase.auth.getSession();
+
       const user = sessionData.session?.user;
 
       if (!user) {
@@ -26,7 +39,7 @@ const Sidebar = () => {
         return;
       }
 
-      // 2. Buscar el customer asociado a ese usuario
+      // 2. Buscar el customer asociado al usuario
       const { data: customer, error } = await supabase
         .from("customers")
         .select(
@@ -46,7 +59,7 @@ const Sidebar = () => {
         cust_business_management,
       } = customer;
 
-      // 3. Si no tiene ningún modo habilitado, fuera
+      // 3. Si no tiene ningún módulo habilitado, fuera
       if (
         !cust_personal_development &&
         !cust_business_management
@@ -77,6 +90,10 @@ const Sidebar = () => {
   return (
     <div className={style.sidebar}>
 
+      {/* ================================= */}
+      {/* LOGO */}
+      {/* ================================= */}
+
       <section className={style.seccion1}>
         <div className={style.logo}>
           <img src="/logo.png" alt="" />
@@ -91,9 +108,9 @@ const Sidebar = () => {
 
       <section className={style.seccion2}>
 
-        {/* ============================= */}
+        {/* ================================= */}
         {/* DESARROLLO PERSONAL */}
-        {/* ============================= */}
+        {/* ================================= */}
 
         {canPersonalDevelopment && (
           <>
@@ -158,20 +175,20 @@ const Sidebar = () => {
           </>
         )}
 
-        {/* ============================= */}
+        {/* ================================= */}
         {/* GESTIÓN EMPRESARIAL */}
-        {/* ============================= */}
+        {/* ================================= */}
 
         {canBusinessManagement && (
           <>
             <p className={style.tituloSeccion}>
+
               <icon.iconMaleta
                 className={style.iconMaleta}
               />
 
               <b>Gestión Empresarial</b>
 
-              {/* SOLAMENTE LA FLECHA ES CLICKEABLE */}
               <button
                 type="button"
                 className={style.botonArrow}
@@ -194,9 +211,8 @@ const Sidebar = () => {
                   }`}
                 />
               </button>
-            </p>
 
-            {/* CONTENIDO DESPLEGABLE */}
+            </p>
 
             {businessManagementOpen && (
               <>
@@ -208,6 +224,9 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
+                <icon.iconUsers
+                  className={style.iconGlobo}
+                />
                   Personal
                 </NavLink>
 
@@ -219,10 +238,208 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
+                <icon.iconAsistencia
+                  className={style.iconGlobo}
+                />
                   Asistencia
                 </NavLink>
               </>
             )}
+          </>
+        )}
+
+        {/* ================================= */}
+        {/* EXTENSIONES */}
+        {/* ================================= */}
+
+        {(canPersonalDevelopment ||
+          canBusinessManagement) && (
+          <>
+            <p className={style.tituloSeccion}>
+
+              <icon.iconExtension
+                className={style.iconMaleta}
+              />
+
+              <b>Extensiones</b>
+
+              <button
+                type="button"
+                className={style.botonArrow}
+                onClick={() =>
+                  setExtensionsOpen(!extensionsOpen)
+                }
+                aria-label={
+                  extensionsOpen
+                    ? "Ocultar Extensiones"
+                    : "Mostrar Extensiones"
+                }
+              >
+                <icon.iconArrowDown
+                  className={`${style.iconArrowDown} ${
+                    extensionsOpen
+                      ? style.iconArrowDownOpen
+                      : ""
+                  }`}
+                />
+              </button>
+
+            </p>
+
+            {extensionsOpen && (
+              <>
+                <NavLink
+                  to="/extensions"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+              <icon.iconExtension
+                className={style.iconGlobo}
+              />
+                  Extensiones
+                </NavLink>
+              </>
+            )}
+          </>
+        )}
+
+        {/* ================================= */}
+        {/* GESTIÓN DIGITAL */}
+        {/* ================================= */}
+
+        {(canPersonalDevelopment ||
+          canBusinessManagement) && (
+          <>
+            <p className={style.tituloSeccion}>
+
+              <icon.iconGestionDigital
+                className={style.iconMaleta}
+              />
+
+              <b>Gestión Digital</b>
+
+              <button
+                type="button"
+                className={style.botonArrow}
+                onClick={() =>
+                  setDigitalManagementOpen(
+                    !digitalManagementOpen
+                  )
+                }
+                aria-label={
+                  digitalManagementOpen
+                    ? "Ocultar Gestión Digital"
+                    : "Mostrar Gestión Digital"
+                }
+              >
+                <icon.iconArrowDown
+                  className={`${style.iconArrowDown} ${
+                    digitalManagementOpen
+                      ? style.iconArrowDownOpen
+                      : ""
+                  }`}
+                />
+              </button>
+
+            </p>
+
+            {digitalManagementOpen && (
+              <>
+
+                <NavLink
+                  to="/web"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                <icon.iconGlobo
+                  className={style.iconGlobo}
+                />
+                  Sitio Web
+                </NavLink>
+                <NavLink
+                  to="/mobile"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                <icon.iconMovil
+                  className={style.iconGlobo}
+                />
+                  Aplicación Móvil
+                </NavLink>
+
+                <NavLink
+                  to="/appearance"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                <icon.iconPaleta
+                  className={style.iconGlobo}
+                />
+                  Diseño y Apariencia
+                </NavLink>
+
+                <NavLink
+                  to="/configuration"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                <icon.iconConfiguracion
+                  className={style.iconGlobo}
+                />
+                  Configuración
+                </NavLink>
+              </>
+            )}
+          </>
+        )}
+         {(canPersonalDevelopment ||
+          canBusinessManagement) && (
+          <>
+            <p className={style.tituloSeccion}>
+           <NavLink
+                  to="/map"
+                  className={style.tituloSeccion}
+                  
+                >
+                <icon.iconMapa
+                  className={style.iconMaleta}
+                />
+                  Mapa
+                </NavLink>
+
+            </p>
+          </>
+        )}
+
+         {(canPersonalDevelopment ||
+          canBusinessManagement) && (
+          <>
+            <p className={style.tituloSeccion}>
+
+              <icon.iconAnuncio
+                className={style.iconMaleta}
+              />
+
+              <b>Anuncio</b>
+              
+            </p>
+
+       
           </>
         )}
 

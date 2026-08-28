@@ -156,3 +156,10 @@
 .iconArrowDownOpen {
   transform: rotate(180deg);
 }
+
+.iconGlobo{
+  display: flex;
+  margin-left: 10px;
+  width: 16px;
+  height: 16px;
+}

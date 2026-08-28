@@ -13,7 +13,18 @@ import { iconUser } from "./user";
 import { iconLock } from "./lock";
 import { iconSuma } from "./suma";
 import { iconLoading } from "./loading";
-import { iconMaleta } from "./Maleta";
+import { iconMaleta } from "./maleta";
+import { iconExtension } from "./extension";
+import { iconGestionDigital } from "./gestion-digital";
+import { iconGlobo } from "./globo";
+import { iconMovil } from "./movil";
+import { iconPaleta } from "./paleta-colores";
+import { iconConfiguracion } from "./configuracion";
+import { iconUsers } from "./users";
+import { iconAsistencia } from "./asistencia";
+import { iconAnuncio } from "./anuncio";
+import { iconMapa } from "./mapa";
+import { iconBell } from "./bell";
 
 export const icon = {
   iconHojaPaper,
@@ -31,5 +42,16 @@ export const icon = {
   iconLock,
   iconSuma,
   iconLoading,
-  iconMaleta
+  iconMaleta,
+  iconExtension,
+  iconGestionDigital,
+  iconGlobo,
+  iconMovil,
+  iconPaleta,
+  iconConfiguracion,
+  iconUsers,
+  iconAsistencia,
+  iconAnuncio,
+  iconMapa,
+  iconBell
 };

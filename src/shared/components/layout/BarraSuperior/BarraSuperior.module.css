@@ -23,9 +23,36 @@
   opacity: 0.8;
 }
 
-.logo img {
+.circulo {
   width: 40px;
   height: 40px;
-  object-fit: contain;
+  background-color: rgb(28, 28, 223);
   border-radius: 50%;
+}
+.iconUsers{
+  width: 24px;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
+.iconUser{
+  color: aliceblue;
+}
+.seccionInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seccionInfo h2 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.seccionInfo span {
+  font-size: 12px;
+  color: #666;
+  display: block;
 }

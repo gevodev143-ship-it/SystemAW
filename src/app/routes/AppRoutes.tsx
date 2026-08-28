@@ -2,17 +2,19 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import LoginLayout from "../../shared/layouts/LoginLayout";
 import HomeLayout from "../../shared/layouts/HomeLayout";
-import UserLayout from "../../shared/layouts/UserLayout";
-import AttendanceLayout from "../../shared/layouts/AttendanceLayout";
 import StaffLayout from "../../shared/layouts/StaffLayout";
+import AttendanceLayout from "../../shared/layouts/AttendanceLayout";
+import MapLayout from "../../shared/layouts/MapLayout";
+import ExtensionLayout from "../../shared/layouts/ExtensionLayout";
 
 import ProtectedRoute from "../../shared/components/ProtectedRoute";
 
 import LoginRoutes from "../../modules/login/routes/LoginRoutes";
 import HomeRoutes from "../../modules/home/routes/HomeRoutes";
-import UserRoutes from "../../modules/user/routes/UserRoutes";
-import AttendanceRoutes from "../../modules/attendance/routes/AttendanceRoutes";
 import StaffRoutes from "../../modules/staff/routes/StaffRoutes";
+import AttendanceRoutes from "../../modules/attendance/routes/AttendanceRoutes";
+import MapRoutes from "../../modules/map/routes/MapRoutes";
+import ExtensionRoutes from "../../modules/extension/routes/ExtensionRoutes";
 
 export default function AppRoutes() {
     return (
@@ -32,22 +34,20 @@ export default function AppRoutes() {
 
                 <Route element={<ProtectedRoute />}>
 
-
-
-                    <Route element={<UserLayout />}>
-                        {UserRoutes}
-                    </Route>
-
                     <Route element={<StaffLayout />}>
                         {StaffRoutes}
                     </Route>
 
-
-
-
-
                     <Route element={<AttendanceLayout />}>
                         {AttendanceRoutes}
+                    </Route>
+        
+                    <Route element={<MapLayout />}>
+                        {MapRoutes}
+                    </Route>
+                            
+                    <Route element={<ExtensionLayout />}>
+                        {ExtensionRoutes}
                     </Route>
 
 
