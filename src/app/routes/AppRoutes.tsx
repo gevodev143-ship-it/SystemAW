@@ -22,6 +22,7 @@ export default function AppRoutes() {
             <Routes>
 
                 {/* ==================== PÚBLICO ==================== */}
+                
                 <Route element={<HomeLayout />}>
                     {HomeRoutes}
                 </Route>
@@ -49,8 +50,6 @@ export default function AppRoutes() {
                     <Route element={<ExtensionLayout />}>
                         {ExtensionRoutes}
                     </Route>
-
-
 
                 </Route>
 

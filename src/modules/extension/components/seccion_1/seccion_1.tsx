@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import React from "react";
 import style from "./seccion_1.module.css";
 import { supabase } from "../../../../lib/supabase";
+import { toPng } from "html-to-image";
+import { QRCodeCanvas } from "qrcode.react";
+import { images } from "../../../../assets/img";
 
 interface ExtensionRow {
   extns_id: number;
@@ -12,10 +15,23 @@ interface ExtensionRow {
   cust_id: number;
 }
 
+interface Seccion1Props {
+  extnsName: string;
+}
+
+// Libs disponibles para cualquier extensión guardada en la BD.
+// Cada vez que instales una dependencia nueva para una extensión,
+// impórtala arriba y agrégala aquí.
+const libs = {
+  toPng,
+  QRCodeCanvas,
+  images,
+};
+
 // TODO: reemplazar por el cust_id real (contexto de sesión / auth del cliente logueado)
 const CUST_ID = 1;
 
-const Seccion_1 = () => {
+const Seccion_1 = ({ extnsName }: Seccion1Props) => {
   const [Componente, setComponente] = useState<React.ComponentType | null>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,17 +42,27 @@ const Seccion_1 = () => {
     const cargarExtension = async () => {
       setCargando(true);
       setError(null);
+      setComponente(null);
+
+      if (!extnsName) {
+        if (activo) {
+          setError("No se especificó ninguna extensión.");
+          setCargando(false);
+        }
+        return;
+      }
 
       const { data, error: errSupabase } = await supabase
         .from("extensions")
         .select("*")
         .eq("cust_id", CUST_ID)
         .eq("extns_activa", true)
+        .eq("extns_name", extnsName)
         .maybeSingle<ExtensionRow>();
 
       if (errSupabase || !data) {
         if (activo) {
-          setError("No se encontró una extensión activa para este cliente.");
+          setError(`No se encontró la extensión "${extnsName}" o no está activa.`);
           setCargando(false);
         }
         return;
@@ -57,9 +83,6 @@ const Seccion_1 = () => {
         const Babel = await import("@babel/standalone");
 
         // 3. Transpilar el TSX guardado a JS ejecutable
-        // IMPORTANTE: runtime "classic" para que el JSX compile a React.createElement(...)
-        // en vez de inyectar un `import` automático de "react/jsx-runtime",
-        // que rompería la ejecución con new Function().
         const codigoJS = Babel.transform(data.extns_codigo_tsx, {
           presets: [
             ["react", { runtime: "classic" }],
@@ -69,10 +92,11 @@ const Seccion_1 = () => {
           filename: "extension.tsx",
         }).code;
 
-        // 4. Ejecutar: la extensión debe hacer `export default` de su componente
+        // 4. Ejecutar: la extensión debe hacer `export default` de su componente.
+        // Recibe React y "libs" (las dependencias externas ya instaladas en el host).
         const moduleShim = { exports: {} as any };
-        const factory = new Function("module", "exports", "React", codigoJS!);
-        factory(moduleShim, moduleShim.exports, React);
+        const factory = new Function("module", "exports", "React", "libs", codigoJS!);
+        factory(moduleShim, moduleShim.exports, React, libs);
 
         const ComponenteExtension =
           moduleShim.exports.default ?? moduleShim.exports;
@@ -97,7 +121,7 @@ const Seccion_1 = () => {
     return () => {
       activo = false;
     };
-  }, []);
+  }, [extnsName]);
 
   return (
     <div className={style.seccion}>

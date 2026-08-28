@@ -4,6 +4,11 @@ import style from "./sidebar.module.css";
 import { supabase } from "../../../../lib/supabase";
 import { icon } from "../../../../core/icons";
 
+interface ExtensionMenuItem {
+  extns_id: number;
+  extns_name: string;
+}
+
 const Sidebar = () => {
   const navigate = useNavigate();
 
@@ -14,6 +19,9 @@ const Sidebar = () => {
 
   const [canBusinessManagement, setCanBusinessManagement] =
     useState(false);
+
+  // Extensiones dinámicas del cliente logueado
+  const [extensions, setExtensions] = useState<ExtensionMenuItem[]>([]);
 
   // Estados de los menús desplegables
   const [businessManagementOpen, setBusinessManagementOpen] =
@@ -39,11 +47,11 @@ const Sidebar = () => {
         return;
       }
 
-      // 2. Buscar el customer asociado al usuario
+      // 2. Buscar el customer asociado al usuario (ahora también traemos cust_id)
       const { data: customer, error } = await supabase
         .from("customers")
         .select(
-          "cust_personal_development, cust_business_management"
+          "cust_id, cust_personal_development, cust_business_management"
         )
         .eq("cust_auth_id", user.id)
         .maybeSingle();
@@ -55,6 +63,7 @@ const Sidebar = () => {
       }
 
       const {
+        cust_id,
         cust_personal_development,
         cust_business_management,
       } = customer;
@@ -76,6 +85,18 @@ const Sidebar = () => {
       setCanBusinessManagement(
         !!cust_business_management
       );
+
+      // 4. Traer las extensiones activas de este cliente
+      const { data: extensionsData, error: extError } = await supabase
+        .from("extensions")
+        .select("extns_id, extns_name")
+        .eq("cust_id", cust_id)
+        .eq("extns_activa", true)
+        .order("extns_name", { ascending: true });
+
+      if (!extError && extensionsData) {
+        setExtensions(extensionsData);
+      }
 
       setLoading(false);
     };
@@ -288,19 +309,20 @@ const Sidebar = () => {
 
             {extensionsOpen && (
               <>
-                <NavLink
-                  to="/extensions"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-              <icon.iconExtension
-                className={style.iconGlobo}
-              />
-                  Extensiones
-                </NavLink>
+                {extensions.map((ext) => (
+                  <NavLink
+                    key={ext.extns_id}
+                    to={`/extensions/${encodeURIComponent(ext.extns_name)}`}
+                    className={({ isActive }) =>
+                      isActive
+                        ? `${style.link} ${style.linkActivo}`
+                        : style.link
+                    }
+                  >
+                    <icon.iconExtension className={style.iconGlobo} />
+                    {ext.extns_name}
+                  </NavLink>
+                ))}
               </>
             )}
           </>
