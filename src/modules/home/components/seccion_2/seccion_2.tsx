@@ -7,7 +7,7 @@ const Seccion_2 = () => {
 
   return (
     <div className={style.seccion}>
-      <a href="login/">
+      <a href="login">
         <button>ACCEDER</button>
       </a>
         

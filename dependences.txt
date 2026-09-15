@@ -11,3 +11,8 @@ npm install -D @types/leaflet
 /extensions
 npm install @babel/standalone
 npm install -D @types/babel__standalone
+
+/attendance
+npm install --save-dev @types/react
+
+npm install react-qr-code html2canvas

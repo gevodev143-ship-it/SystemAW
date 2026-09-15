@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,125 +9,42 @@
 }
 
 .modal {
-  background-color: #fff;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 10px;
   width: 100%;
-  max-width: 360px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  overflow: hidden;
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.titulo {
+.header h3 {
   margin: 0;
-  font-size: 15px;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #333;
 }
 
-.cerrar {
+.closeBtn {
+  background: none;
   border: none;
-  background: transparent;
-  color: #888;
-  font-size: 20px;
+  font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
+  color: #6b7280;
 }
 
-.cerrar:hover {
-  color: #333;
+.closeBtn:hover {
+  color: #111827;
 }
 
-.cuerpo {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  color: #555;
-  font-weight: 500;
-}
-
-.campo input {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 7px 10px;
-  font-size: 13px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #222;
-  outline: none;
-}
-
-.campo input:focus {
-  border-color: #2b5aa0;
-}
-
-.mensaje {
-  padding: 20px 16px;
-  text-align: center;
-  color: #888;
-}
-
-.error {
-  background-color: #fdecea;
-  color: #b3261e;
-  padding: 8px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
-.acciones {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.btnCancelar,
-.btnGuardar {
-  border: none;
-  border-radius: 4px;
-  padding: 8px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.btnCancelar {
-  background-color: #f0f0f0;
-  color: #555;
-}
-
-.btnCancelar:hover {
-  background-color: #e5e5e5;
-}
-
-.btnGuardar {
-  background-color: #2b5aa0;
-  color: #fff;
-}
-
-.btnGuardar:hover {
-  background-color: #234a85;
-}
-
-.btnCancelar:disabled,
-.btnGuardar:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.body {
+  padding: 20px;
 }

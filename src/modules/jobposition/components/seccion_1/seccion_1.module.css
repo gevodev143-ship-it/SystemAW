@@ -1,0 +1,102 @@
+.seccion {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.encabezado {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.botonCrear {
+    background-color: #3B82F6;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.botonCrear:hover {
+    background-color: #2563EB;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.acciones {
+    display: flex;
+    gap: 8px;
+}
+
+.botonEliminar {
+    background-color: #EF4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContenido {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 24px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.input,
+.textarea {
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+.textarea {
+    min-height: 70px;
+    resize: vertical;
+}
+
+.modalAcciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.textoError {
+    color: #EF4444;
+    font-size: 13px;
+}

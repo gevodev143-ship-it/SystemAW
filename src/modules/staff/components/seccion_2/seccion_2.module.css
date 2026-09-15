@@ -1,0 +1,12 @@
+.seccion{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+
+}
+
+button{
+    display: flex;
+
+    margin-top: 23px;
+}

@@ -20,6 +20,10 @@ const Sidebar = () => {
   const [canBusinessManagement, setCanBusinessManagement] =
     useState(false);
 
+  // NUEVO: bandera propia para Gestión Digital, ya no depende de las otras dos
+  const [canDigitalManagement, setCanDigitalManagement] =
+    useState(false);
+
   // Extensiones dinámicas del cliente logueado
   const [extensions, setExtensions] = useState<ExtensionMenuItem[]>([]);
 
@@ -36,9 +40,7 @@ const Sidebar = () => {
   useEffect(() => {
     const cargarPermisos = async () => {
       // 1. Verificar que haya una sesión activa
-      const { data: sessionData } =
-        await supabase.auth.getSession();
-
+      const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData.session?.user;
 
       if (!user) {
@@ -47,43 +49,51 @@ const Sidebar = () => {
         return;
       }
 
-      // 2. Buscar el customer asociado al usuario (ahora también traemos cust_id)
-      const { data: customer, error } = await supabase
+      // 2. Buscar el customer asociado al usuario
+      const { data: customer, error: customerError } = await supabase
         .from("customers")
-        .select(
-          "cust_id, cust_personal_development, cust_business_management"
-        )
+        .select("cust_id")
         .eq("cust_auth_id", user.id)
         .maybeSingle();
 
-      if (error || !customer) {
+      if (customerError || !customer) {
         localStorage.removeItem("aw_erp_jwt");
         navigate("/login");
         return;
       }
 
-      const {
-        cust_id,
-        cust_personal_development,
-        cust_business_management,
-      } = customer;
+      const { cust_id } = customer;
 
-      // 3. Si no tiene ningún módulo habilitado, fuera
-      if (
-        !cust_personal_development &&
-        !cust_business_management
-      ) {
+      // 3. Buscar los módulos activos asignados a este cliente
+      // Se filtra tanto cust_mod_is_active (activo para este cliente)
+      // como mod_is_active (módulo habilitado a nivel global)
+      const { data: custModules, error: modulesError } = await supabase
+        .from("customer_modules")
+        .select("mod_id, modules(mod_name, mod_is_active)")
+        .eq("cust_id", cust_id)
+        .eq("cust_mod_is_active", true);
+
+      if (modulesError || !custModules || custModules.length === 0) {
         localStorage.removeItem("aw_erp_jwt");
         navigate("/login");
         return;
       }
+
+      const nombresModulos = custModules
+        .filter((cm: any) => cm.modules?.mod_is_active !== false)
+        .map((cm: any) => cm.modules?.mod_name)
+        .filter(Boolean);
 
       setCanPersonalDevelopment(
-        !!cust_personal_development
+        nombresModulos.includes("Desarrollo Personal")
       );
 
       setCanBusinessManagement(
-        !!cust_business_management
+        nombresModulos.includes("Gestión Empresarial")
+      );
+
+      setCanDigitalManagement(
+        nombresModulos.includes("Gestión Digital")
       );
 
       // 4. Traer las extensiones activas de este cliente
@@ -108,9 +118,14 @@ const Sidebar = () => {
     return null;
   }
 
+  // Si el cliente no tiene ningún módulo activo, no mostramos nada de contenido
+  const tieneAlgunModulo =
+    canPersonalDevelopment ||
+    canBusinessManagement ||
+    canDigitalManagement;
+
   return (
     <div className={style.sidebar}>
-
       {/* ================================= */}
       {/* LOGO */}
       {/* ================================= */}
@@ -128,7 +143,6 @@ const Sidebar = () => {
       </section>
 
       <section className={style.seccion2}>
-
         {/* ================================= */}
         {/* DESARROLLO PERSONAL */}
         {/* ================================= */}
@@ -142,9 +156,7 @@ const Sidebar = () => {
             <NavLink
               to="/habits"
               className={({ isActive }) =>
-                isActive
-                  ? `${style.link} ${style.linkActivo}`
-                  : style.link
+                isActive ? `${style.link} ${style.linkActivo}` : style.link
               }
             >
               Hábitos
@@ -153,9 +165,7 @@ const Sidebar = () => {
             <NavLink
               to="/historys"
               className={({ isActive }) =>
-                isActive
-                  ? `${style.link} ${style.linkActivo}`
-                  : style.link
+                isActive ? `${style.link} ${style.linkActivo}` : style.link
               }
             >
               Historial
@@ -164,9 +174,7 @@ const Sidebar = () => {
             <NavLink
               to="/templates"
               className={({ isActive }) =>
-                isActive
-                  ? `${style.link} ${style.linkActivo}`
-                  : style.link
+                isActive ? `${style.link} ${style.linkActivo}` : style.link
               }
             >
               Progreso
@@ -175,9 +183,7 @@ const Sidebar = () => {
             <NavLink
               to="/templates"
               className={({ isActive }) =>
-                isActive
-                  ? `${style.link} ${style.linkActivo}`
-                  : style.link
+                isActive ? `${style.link} ${style.linkActivo}` : style.link
               }
             >
               Métricas
@@ -186,9 +192,7 @@ const Sidebar = () => {
             <NavLink
               to="/templates"
               className={({ isActive }) =>
-                isActive
-                  ? `${style.link} ${style.linkActivo}`
-                  : style.link
+                isActive ? `${style.link} ${style.linkActivo}` : style.link
               }
             >
               Biblioteca
@@ -203,10 +207,7 @@ const Sidebar = () => {
         {canBusinessManagement && (
           <>
             <p className={style.tituloSeccion}>
-
-              <icon.iconMaleta
-                className={style.iconMaleta}
-              />
+              <icon.iconMaleta className={style.iconMaleta} />
 
               <b>Gestión Empresarial</b>
 
@@ -214,9 +215,7 @@ const Sidebar = () => {
                 type="button"
                 className={style.botonArrow}
                 onClick={() =>
-                  setBusinessManagementOpen(
-                    !businessManagementOpen
-                  )
+                  setBusinessManagementOpen(!businessManagementOpen)
                 }
                 aria-label={
                   businessManagementOpen
@@ -226,13 +225,10 @@ const Sidebar = () => {
               >
                 <icon.iconArrowDown
                   className={`${style.iconArrowDown} ${
-                    businessManagementOpen
-                      ? style.iconArrowDownOpen
-                      : ""
+                    businessManagementOpen ? style.iconArrowDownOpen : ""
                   }`}
                 />
               </button>
-
             </p>
 
             {businessManagementOpen && (
@@ -245,10 +241,42 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
-                <icon.iconUsers
-                  className={style.iconGlobo}
-                />
-                  Personal
+                  <icon.iconUsers className={style.iconGlobo} />
+                  Personal  
+                </NavLink>
+
+                <NavLink
+                  to="/staff"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                  <icon.iconOrganigrama className={style.iconGlobo1} />
+                  Organigrama
+                </NavLink>
+                <NavLink
+                  to="/job_position"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                  <icon.iconCargo className={style.iconGlobo1} />
+                  Cargo
+                </NavLink>
+                <NavLink
+                  to="/staff"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                  <icon.iconRol className={style.iconGlobo1} />
+                  Rol
                 </NavLink>
 
                 <NavLink
@@ -259,9 +287,7 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
-                <icon.iconAsistencia
-                  className={style.iconGlobo}
-                />
+                  <icon.iconAsistencia className={style.iconGlobo} />
                   Asistencia
                 </NavLink>
               </>
@@ -272,39 +298,30 @@ const Sidebar = () => {
         {/* ================================= */}
         {/* EXTENSIONES */}
         {/* ================================= */}
+        {/* Se muestra si el cliente tiene cualquier módulo, ya que las
+            extensiones son transversales y no pertenecen a un módulo fijo */}
 
-        {(canPersonalDevelopment ||
-          canBusinessManagement) && (
+        {tieneAlgunModulo && extensions.length > 0 && (
           <>
             <p className={style.tituloSeccion}>
-
-              <icon.iconExtension
-                className={style.iconMaleta}
-              />
+              <icon.iconExtension className={style.iconMaleta} />
 
               <b>Extensiones</b>
 
               <button
                 type="button"
                 className={style.botonArrow}
-                onClick={() =>
-                  setExtensionsOpen(!extensionsOpen)
-                }
+                onClick={() => setExtensionsOpen(!extensionsOpen)}
                 aria-label={
-                  extensionsOpen
-                    ? "Ocultar Extensiones"
-                    : "Mostrar Extensiones"
+                  extensionsOpen ? "Ocultar Extensiones" : "Mostrar Extensiones"
                 }
               >
                 <icon.iconArrowDown
                   className={`${style.iconArrowDown} ${
-                    extensionsOpen
-                      ? style.iconArrowDownOpen
-                      : ""
+                    extensionsOpen ? style.iconArrowDownOpen : ""
                   }`}
                 />
               </button>
-
             </p>
 
             {extensionsOpen && (
@@ -331,15 +348,15 @@ const Sidebar = () => {
         {/* ================================= */}
         {/* GESTIÓN DIGITAL */}
         {/* ================================= */}
+        {/* CORREGIDO: antes se mostraba con canPersonalDevelopment ||
+            canBusinessManagement, lo que la hacía visible aunque el cliente
+            NO tuviera contratado el módulo "Gestión Digital". Ahora depende
+            únicamente de canDigitalManagement. */}
 
-        {(canPersonalDevelopment ||
-          canBusinessManagement) && (
+        {canDigitalManagement && (
           <>
             <p className={style.tituloSeccion}>
-
-              <icon.iconGestionDigital
-                className={style.iconMaleta}
-              />
+              <icon.iconGestionDigital className={style.iconMaleta} />
 
               <b>Gestión Digital</b>
 
@@ -347,9 +364,7 @@ const Sidebar = () => {
                 type="button"
                 className={style.botonArrow}
                 onClick={() =>
-                  setDigitalManagementOpen(
-                    !digitalManagementOpen
-                  )
+                  setDigitalManagementOpen(!digitalManagementOpen)
                 }
                 aria-label={
                   digitalManagementOpen
@@ -359,18 +374,14 @@ const Sidebar = () => {
               >
                 <icon.iconArrowDown
                   className={`${style.iconArrowDown} ${
-                    digitalManagementOpen
-                      ? style.iconArrowDownOpen
-                      : ""
+                    digitalManagementOpen ? style.iconArrowDownOpen : ""
                   }`}
                 />
               </button>
-
             </p>
 
             {digitalManagementOpen && (
               <>
-
                 <NavLink
                   to="/web"
                   className={({ isActive }) =>
@@ -379,11 +390,10 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
-                <icon.iconGlobo
-                  className={style.iconGlobo}
-                />
+                  <icon.iconGlobo className={style.iconGlobo} />
                   Sitio Web
                 </NavLink>
+
                 <NavLink
                   to="/mobile"
                   className={({ isActive }) =>
@@ -392,9 +402,7 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
-                <icon.iconMovil
-                  className={style.iconGlobo}
-                />
+                  <icon.iconMovil className={style.iconGlobo} />
                   Aplicación Móvil
                 </NavLink>
 
@@ -406,9 +414,7 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
-                <icon.iconPaleta
-                  className={style.iconGlobo}
-                />
+                  <icon.iconPaleta className={style.iconGlobo} />
                   Diseño y Apariencia
                 </NavLink>
 
@@ -420,51 +426,41 @@ const Sidebar = () => {
                       : style.link
                   }
                 >
-                <icon.iconConfiguracion
-                  className={style.iconGlobo}
-                />
+                  <icon.iconConfiguracion className={style.iconGlobo} />
                   Configuración
                 </NavLink>
               </>
             )}
           </>
         )}
-         {(canPersonalDevelopment ||
-          canBusinessManagement) && (
-          <>
-            <p className={style.tituloSeccion}>
-           <NavLink
-                  to="/map"
-                  className={style.tituloSeccion}
-                  
-                >
-                <icon.iconMapa
-                  className={style.iconMaleta}
-                />
-                  Mapa
-                </NavLink>
 
-            </p>
-          </>
+        {/* ================================= */}
+        {/* MAPA */}
+        {/* ================================= */}
+        {/* No corresponde a un módulo específico de la tabla `modules`,
+            así que se mantiene visible mientras el cliente tenga al menos
+            un módulo activo. Si "Mapa" debe pertenecer a un módulo concreto,
+            avísame cuál y lo condiciono igual que Gestión Digital. */}
+
+        {tieneAlgunModulo && (
+          <p className={style.tituloSeccion}>
+            <NavLink to="/map" className={style.tituloSeccion}>
+              <icon.iconMapa className={style.iconMaleta} />
+              Mapa
+            </NavLink>
+          </p>
         )}
 
-         {(canPersonalDevelopment ||
-          canBusinessManagement) && (
-          <>
-            <p className={style.tituloSeccion}>
+        {/* ================================= */}
+        {/* ANUNCIO */}
+        {/* ================================= */}
 
-              <icon.iconAnuncio
-                className={style.iconMaleta}
-              />
-
-              <b>Anuncio</b>
-              
-            </p>
-
-       
-          </>
+        {tieneAlgunModulo && (
+          <p className={style.tituloSeccion}>
+            <icon.iconAnuncio className={style.iconMaleta} />
+            <b>Anuncio</b>
+          </p>
         )}
-
       </section>
     </div>
   );

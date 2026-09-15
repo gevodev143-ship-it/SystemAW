@@ -1,0 +1,166 @@
+.card {
+  position: relative;
+  width: 300px;
+  min-height: 340px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e8e8ec;
+  box-shadow: 0 8px 24px rgba(20, 20, 30, 0.08), 0 2px 6px rgba(20, 20, 30, 0.04);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.titulo {
+  text-align: center;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1f;
+  letter-spacing: -0.01em;
+}
+
+.label {
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #4b5563;
+}
+
+.input {
+  background-color: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  height: 34px;
+  margin-bottom: 14px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #1a1a1f;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2f6fed;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.15);
+}
+
+.enlace {
+  align-self: flex-end;
+  color: #2f6fed;
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}
+
+.boton {
+  background-color: #2f6fed;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  height: 38px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+.boton:hover {
+  background-color: #2559c9;
+}
+
+.boton:active {
+  transform: scale(0.98);
+}
+
+.boton:disabled {
+  background-color: #a8bff5;
+  cursor: not-allowed;
+}
+
+.textoError {
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* ===================== Modal de elección de módulo ===================== */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(17, 17, 24, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modalContenido {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 48px rgba(20, 20, 30, 0.2);
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.modalTexto {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+  margin: 0 0 4px 0;
+}
+
+.opcionesModo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.opcionModo {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1f;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.opcionModo:hover {
+  border-color: #2f6fed;
+  background-color: #f5f8ff;
+}
+.inputPasswordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.togglePassword {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  color: #666;
+}

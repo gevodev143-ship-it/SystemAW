@@ -25,6 +25,9 @@ import { iconAsistencia } from "./asistencia";
 import { iconAnuncio } from "./anuncio";
 import { iconMapa } from "./mapa";
 import { iconBell } from "./bell";
+import { iconOrganigrama } from "./organigrama";
+import { iconRol } from "./rol";
+import { iconCargo } from "./cargo";
 
 export const icon = {
   iconHojaPaper,
@@ -53,5 +56,8 @@ export const icon = {
   iconAsistencia,
   iconAnuncio,
   iconMapa,
-  iconBell
+  iconBell,
+  iconOrganigrama,
+  iconRol,
+  iconCargo
 };

@@ -1,225 +1,167 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../../lib/supabase";
 import style from "./seccion_3.module.css";
 import Modal from "./modal";
 
-export interface Asistencia {
-  asis_id: number;
-  asis_marca_temporal: string;
-  asis_dni: string;
-  asis_dato: string;
-  asis_hora: string;
-  asis_fecha: string; 
+interface StaffAttendance {
+  att_id: number;
+  att_fecha: string;
+  att_inicio_jornada: string | null;
+  att_inicio_receso: string | null;
+  att_fin_receso: string | null;
+  att_fin_jornada: string | null;
+  stff_id: number;
+  staffs: {
+    stff_name: string;
+    stff_lastname: string;
+    stff_dni: string;
+    stff_link_img: string | null;
+  };
 }
 
-const REGISTROS_POR_PAGINA = 50;
-
-const formatearHora = (hora: string) => {
-  // "13:07:00" -> "01:07:00 p. m."
-  const [h, m, s] = hora.split(":").map(Number);
-  const periodo = h >= 12 ? "p. m." : "a. m.";
-  const hora12 = h % 12 === 0 ? 12 : h % 12;
-  return `${String(hora12).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")} ${periodo}`;
-};
-
-const formatearFecha = (fecha: string) => {
-  // "2026-01-07" -> "7/01/2026"
-  const [anio, mes, dia] = fecha.split("-");
-  return `${Number(dia)}/${mes}/${anio}`;
-};
-
 const Seccion_3 = () => {
-  const [registros, setRegistros] = useState<Asistencia[]>([]);
-  const [cargando, setCargando] = useState(true);
-  const [idEditar, setIdEditar] = useState<number | null>(null);
-  const [idEliminando, setIdEliminando] = useState<number | null>(null);
-  const [paginaActual, setPaginaActual] = useState(1);
+  const navigate = useNavigate();
 
-  const cargarRegistros = async () => {
-    setCargando(true);
+  const [custId, setCustId] = useState<number | null>(null);
+  const [attendances, setAttendances] = useState<StaffAttendance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<StaffAttendance | null>(null);
 
-    // Traemos todos los registros paginando internamente en bloques de 1000
-    // (límite por defecto de Supabase/PostgREST) hasta cubrir el total.
-    const TAMANO_LOTE = 1000;
-    let desde = 0;
-    let todos: Asistencia[] = [];
+  // 1. Resolver custId a partir de la sesión, igual que el Sidebar
+  useEffect(() => {
+    const resolveCustId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-    while (true) {
-      const { data, error } = await supabase
-        .from("asistencia")
-        .select("*")
-        .order("asis_marca_temporal", { ascending: false })
-        .range(desde, desde + TAMANO_LOTE - 1);
-
-      if (error) {
-        console.error("Error al cargar asistencia:", error);
-        break;
+      if (!session) {
+        localStorage.clear();
+        navigate("/login");
+        return;
       }
 
-      const lote = (data as Asistencia[]) ?? [];
-      todos = todos.concat(lote);
+      const { data: customer, error } = await supabase
+        .from("customers")
+        .select("cust_id")
+        .eq("cust_auth_id", session.user.id)
+        .single();
 
-      if (lote.length < TAMANO_LOTE) break;
-      desde += TAMANO_LOTE;
-    }
+      if (error || !customer) {
+        localStorage.clear();
+        navigate("/login");
+        return;
+      }
 
-    setRegistros(todos);
-    setPaginaActual(1);
-    setCargando(false);
-  };
+      setCustId(customer.cust_id);
+    };
 
+    resolveCustId();
+  }, [navigate]);
+
+  // 2. Cargar asistencias del día solo cuando ya tenemos custId
   useEffect(() => {
-    cargarRegistros();
-  }, []);
+    if (custId === null) return;
 
-  const handleEliminar = async (id: number) => {
-    const confirmar = window.confirm(
-      "¿Seguro que deseas eliminar este registro? Esta acción no se puede deshacer."
+    const fetchAttendances = async () => {
+      setLoading(true);
+
+      const today = new Date().toISOString().split("T")[0];
+
+      const { data, error } = await supabase
+        .from("attendance")
+        .select(
+          `
+          att_id,
+          att_fecha,
+          att_inicio_jornada,
+          att_inicio_receso,
+          att_fin_receso,
+          att_fin_jornada,
+          stff_id,
+          staffs!inner (
+            stff_name,
+            stff_lastname,
+            stff_dni,
+            stff_link_img,
+            cust_id
+          )
+        `
+        )
+        .eq("att_fecha", today)
+        .eq("staffs.cust_id", custId);
+
+      if (error) {
+        console.error("Error al cargar asistencias:", error);
+        setAttendances([]);
+      } else {
+        setAttendances((data as unknown as StaffAttendance[]) ?? []);
+      }
+
+      setLoading(false);
+    };
+
+    fetchAttendances();
+  }, [custId]);
+
+  const totalRegistrados = useMemo(() => attendances.length, [attendances]);
+
+  // El loading cubre tanto la resolución de custId como la carga de asistencia
+  if (loading) {
+    return (
+      <div className={style.seccion}>
+        <p>Cargando asistencia...</p>
+      </div>
     );
-    if (!confirmar) return;
-
-    setIdEliminando(id);
-    const { error } = await supabase.from("asistencia").delete().eq("asis_id", id);
-    setIdEliminando(null);
-
-    if (error) {
-      console.error("Error al eliminar registro:", error);
-      window.alert("No se pudo eliminar el registro");
-      return;
-    }
-
-    setRegistros((prev) => {
-      const nuevos = prev.filter((r) => r.asis_id !== id);
-      const totalPaginas = Math.max(1, Math.ceil(nuevos.length / REGISTROS_POR_PAGINA));
-      setPaginaActual((pagina) => Math.min(pagina, totalPaginas));
-      return nuevos;
-    });
-  };
-
-  const totalPaginas = Math.max(1, Math.ceil(registros.length / REGISTROS_POR_PAGINA));
-
-  const registrosPagina = useMemo(() => {
-    const inicio = (paginaActual - 1) * REGISTROS_POR_PAGINA;
-    return registros.slice(inicio, inicio + REGISTROS_POR_PAGINA);
-  }, [registros, paginaActual]);
-
-  const irAPagina = (pagina: number) => {
-    const destino = Math.min(Math.max(pagina, 1), totalPaginas);
-    setPaginaActual(destino);
-  };
+  }
 
   return (
     <div className={style.seccion}>
-      <section className={style.tabla}>
+      <h2>Asistencia de hoy ({totalRegistrados})</h2>
 
-        <div className={style.header}>
-          <span>Trabajador</span>
-          <span>DNI</span>
-          <span>Hora</span>
-          <span>Fecha</span>
-          <span>Marca temporal</span>
-          <span>Acciones</span>
-        </div>
-
-        {cargando && <p className={style.sinResultados}>Cargando...</p>}
-
-        {!cargando && registros.length === 0 && (
-          <p className={style.sinResultados}>No se encontraron resultados</p>
-        )}
-
-        {!cargando && registrosPagina.map((r) => (
-          <div key={r.asis_id} className={style.fila}>
-            <div className={style.nombreCol}>
-              <div className={style.avatar}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5">
-                  <circle cx="12" cy="8" r="4"/>
-                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                </svg>
-              </div>
-              <div>
-                <p className={style.nombre}>{r.asis_dato}</p>
-              </div>
-            </div>
-
-            <span className={style.celda}>{r.asis_dni}</span>
-
-            <span className={style.celda}>{formatearHora(r.asis_hora)}</span>
-
-            <span className={style.celda}>{formatearFecha(r.asis_fecha)}</span>
-
-            <div className={style.celda}>
-              <span className={style.marcaBadge}>
-                {new Date(r.asis_marca_temporal).toLocaleString("es-PE")}
-              </span>
-            </div>
-
-            <div className={style.accionesCol}>
-              <button
-                className={style.btnAccion}
-                title="Editar"
-                type="button"
-                onClick={() => setIdEditar(r.asis_id)}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="#2b5aa0" strokeWidth="1.8">
-                  <path d="M12 20h9" />
-                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-                </svg>
-              </button>
-
-              <button
-                className={style.btnAccion}
-                title="Eliminar"
-                type="button"
-                disabled={idEliminando === r.asis_id}
-                onClick={() => handleEliminar(r.asis_id)}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="#c0392b" strokeWidth="1.8">
-                  <path d="M3 6h18" />
-                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                  <path d="M10 11v6" />
-                  <path d="M14 11v6" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        ))}
-
-      </section>
-
-      {!cargando && registros.length > 0 && (
-        <div className={style.paginacion}>
-          <button
-            type="button"
-            className={style.btnPagina}
-            onClick={() => irAPagina(paginaActual - 1)}
-            disabled={paginaActual === 1}
-          >
-            Anterior
-          </button>
-
-          <span className={style.infoPagina}>
-            Página {paginaActual} de {totalPaginas} ({registros.length} registros)
-          </span>
-
-          <button
-            type="button"
-            className={style.btnPagina}
-            onClick={() => irAPagina(paginaActual + 1)}
-            disabled={paginaActual === totalPaginas}
-          >
-            Siguiente
-          </button>
-        </div>
+      {attendances.length === 0 ? (
+        <p>No hay registros de asistencia para el día de hoy.</p>
+      ) : (
+        <table className={style.tabla}>
+          <thead>
+            <tr>
+              <th>Personal</th>
+              <th>DNI</th>
+              <th>Inicio jornada</th>
+              <th>Inicio receso</th>
+              <th>Fin receso</th>
+              <th>Fin jornada</th>
+            </tr>
+          </thead>
+          <tbody>
+            {attendances.map((a) => (
+              <tr key={a.att_id} onClick={() => setSelected(a)}>
+                <td>
+                  {a.staffs.stff_name} {a.staffs.stff_lastname}
+                </td>
+                <td>{a.staffs.stff_dni}</td>
+                <td>{a.att_inicio_jornada ?? "-"}</td>
+                <td>{a.att_inicio_receso ?? "-"}</td>
+                <td>{a.att_fin_receso ?? "-"}</td>
+                <td>{a.att_fin_jornada ?? "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
 
-      {idEditar !== null && (
-        <Modal
-          asisId={idEditar}
-          onClose={() => setIdEditar(null)}
-          onGuardado={cargarRegistros}
-        />
-      )}
+    {selected && (
+      <Modal
+        title={`${selected.staffs.stff_name} ${selected.staffs.stff_lastname}`}
+        onClose={() => setSelected(null)}
+      >
+        <p><strong>DNI:</strong> {selected.staffs.stff_dni}</p>
+        <p><strong>Inicio jornada:</strong> {selected.att_inicio_jornada ?? "-"}</p>
+        <p><strong>Inicio receso:</strong> {selected.att_inicio_receso ?? "-"}</p>
+        <p><strong>Fin receso:</strong> {selected.att_fin_receso ?? "-"}</p>
+        <p><strong>Fin jornada:</strong> {selected.att_fin_jornada ?? "-"}</p>
+      </Modal>
+    )}
     </div>
   );
 };

@@ -6,15 +6,18 @@ import StaffLayout from "../../shared/layouts/StaffLayout";
 import AttendanceLayout from "../../shared/layouts/AttendanceLayout";
 import MapLayout from "../../shared/layouts/MapLayout";
 import ExtensionLayout from "../../shared/layouts/ExtensionLayout";
+import Job_positionLayout from "../../shared/layouts/JobpositionLayout";
 
 import ProtectedRoute from "../../shared/components/ProtectedRoute";
 
 import LoginRoutes from "../../modules/login/routes/LoginRoutes";
 import HomeRoutes from "../../modules/home/routes/HomeRoutes";
 import StaffRoutes from "../../modules/staff/routes/StaffRoutes";
+import JobpositionRoutes from "../../modules/jobposition/routes/JobpositionRoutes";
 import AttendanceRoutes from "../../modules/attendance/routes/AttendanceRoutes";
 import MapRoutes from "../../modules/map/routes/MapRoutes";
 import ExtensionRoutes from "../../modules/extension/routes/ExtensionRoutes";
+
 
 export default function AppRoutes() {
     return (
@@ -37,6 +40,10 @@ export default function AppRoutes() {
 
                     <Route element={<StaffLayout />}>
                         {StaffRoutes}
+                    </Route>
+        
+                    <Route element={<Job_positionLayout />}>
+                        {JobpositionRoutes}
                     </Route>
 
                     <Route element={<AttendanceLayout />}>

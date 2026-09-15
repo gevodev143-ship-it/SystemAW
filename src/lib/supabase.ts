@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "https://yedglwusfjqblzxbcznj.supabase.co";
-const supabaseKey = "sb_publishable_JAEwYoc3fo-J7rQRbd5RTw_0Odu9MN-"; // NO pongas service key
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseKey); 
+export const supabase = createClient(supabaseUrl, supabaseKey);
