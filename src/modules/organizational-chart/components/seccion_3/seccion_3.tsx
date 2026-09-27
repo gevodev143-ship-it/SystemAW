@@ -166,7 +166,8 @@ const Seccion_3 = () => {
         `
         )
         .eq("cust_id", custId)
-        .eq("stff_active", true);
+        .eq("stff_active", true)
+        .returns<StaffMember[]>();
 
       if (error) {
         console.error("ERROR AL OBTENER ORGANIGRAMA:", error);
@@ -175,10 +176,16 @@ const Seccion_3 = () => {
         return;
       }
 
-      setArbol(construirArbol(data ?? []));
-      setLoading(false);
-    };
+      const staffNormalizado: StaffMember[] = (data ?? []).map((d) => ({
+        ...d,
+        job_position_customers: Array.isArray(d.job_position_customers)
+          ? (d.job_position_customers as unknown as JobPositionCustomer[])[0] ?? null
+          : d.job_position_customers,
+      }));
 
+      setArbol(construirArbol(staffNormalizado));
+      setLoading(false);
+  };
     fetchOrganigrama();
   }, [custId]);
 
