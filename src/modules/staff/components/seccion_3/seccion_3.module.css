@@ -1,69 +1,105 @@
-.seccion {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+.seccion{
+    background-color: white;
+    border-radius: 0px 0px 10px 10px;
+    padding: 20px;
+    margin: 0px 20px 20px 20px;
+    font-family: "Inter", sans-serif;
 }
 
-.tabla {
+.textoError{
+    color: #DC2626;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.tabla{
     width: 100%;
     border-collapse: collapse;
+    font-size: 13px;
 }
 
-.tabla th,
-.tabla td {
+.tabla thead th{
     text-align: left;
-    padding: 10px 12px;
+    font-weight: 600;
+    color: #374151;
+    padding: 12px 8px;
     border-bottom: 1px solid #E5E7EB;
+}
+
+.tabla tbody td{
+    padding: 12px 8px;
+    border-bottom: 1px solid #F3F4F6;
+    color: #374151;
     vertical-align: middle;
 }
 
-.foto {
+.foto{
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.fotoVacia {
+.fotoVacia{
     width: 40px;
     height: 40px;
     border-radius: 50%;
     background-color: #E5E7EB;
 }
 
-.badgeActivo {
-    background-color: #DCFCE7;
-    color: #16A34A;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 500;
+.acciones{
+    position: relative;
+    text-align: right;
 }
 
-.badgeInactivo {
-    background-color: #FEE2E2;
-    color: #DC2626;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.acciones {
-    display: flex;
-    gap: 8px;
-}
-
-.botonEliminar {
-    background-color: #EF4444;
-    color: #ffffff;
-    border: none;
+.botonMenu{
+    background: none;
+    border: 1px solid #E5E7EB;
     border-radius: 6px;
-    padding: 6px 10px;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    color: #6B7280;
     cursor: pointer;
 }
 
-.textoError {
-    color: #EF4444;
+.paginacion{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+}
+
+.paginacion button{
+    background: none;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    min-width: 28px;
+    height: 28px;
     font-size: 13px;
+    color: #374151;
+    cursor: pointer;
+}
+
+.paginacion button:disabled{
+    color: #D1D5DB;
+    cursor: not-allowed;
+}
+
+.paginaActiva{
+    background-color: #EFF6FF;
+    border-color: #3B82F6 !important;
+    color: #3B82F6 !important;
+}
+.filaVacia td{
+    padding: 12px 8px;
+    border-bottom: 1px solid #F3F4F6;
+    color: transparent;
+    height: 64px;   
+}
+
+.foto, .fotoVacia{
+    cursor: pointer;
 }

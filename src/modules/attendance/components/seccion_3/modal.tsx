@@ -1,14 +1,15 @@
-import { ReactNode, useEffect } from "react";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
 import style from "./modal.module.css";
 
 interface ModalProps {
+  title: string;
   onClose: () => void;
   children: ReactNode;
-  title?: string;
 }
 
-const Modal = ({ onClose, children, title }: ModalProps) => {
-  // Cerrar con la tecla Escape
+const Modal = ({ title, onClose, children }: ModalProps) => {
+  // Cierra con la tecla ESC
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -19,10 +20,10 @@ const Modal = ({ onClose, children, title }: ModalProps) => {
 
   return (
     <div className={style.overlay} onClick={onClose}>
-      <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+      <div className={style.contenido} onClick={(e) => e.stopPropagation()}>
         <div className={style.header}>
-          {title && <h3>{title}</h3>}
-          <button className={style.closeBtn} onClick={onClose}>
+          <h3>{title}</h3>
+          <button className={style.cerrar} onClick={onClose} aria-label="Cerrar">
             ×
           </button>
         </div>

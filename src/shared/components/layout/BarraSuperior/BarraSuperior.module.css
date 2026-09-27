@@ -1,58 +1,146 @@
 .barrasuperior {
   width: 100%;
   height: 56px;
+
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 1rem;
-  font-size: 14px;
+  justify-content: space-between;
+
+  padding: 0 20px;
+  box-sizing: border-box;
+
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+
   font-family: Arial, Helvetica, sans-serif;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  justify-content: end;
-  
 }
 
-.texto {
-  font-weight: 500;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
-}
+/* =========================
+   INFORMACIÓN DE LA SECCIÓN
+   ========================= */
 
-.texto:hover {
-  opacity: 0.8;
-}
-
-.circulo {
-  width: 40px;
-  height: 40px;
-  background-color: rgb(28, 28, 223);
-  border-radius: 50%;
-}
-.iconUsers{
-  width: 24px;
-  display: flex;
-  justify-content: start;
-  align-items: start;
-}
-
-.iconUser{
-  color: aliceblue;
-}
 .seccionInfo {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .seccionInfo h2 {
-  font-size: 14px;
   margin: 0;
+
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .seccionInfo span {
-  font-size: 12px;
-  color: #666;
   display: block;
+
+  margin-top: 2px;
+
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* =========================
+   USUARIO
+   ========================= */
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Íconos generales */
+
+.iconUsers {
+  width: 32px;
+  height: 32px;
+  color: #4b5563;
+}
+
+.iconHamburguesa {
+  width: 22px;
+  height: 22px;
+  color: #4b5563;
+  background-color: white;
+}
+
+/* =========================
+   FOTO / ICONO DEL USUARIO
+   ========================= */
+
+.circulo {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background-color: #2563eb;
+}
+
+.iconUser {
+  width: 19px;
+  height: 19px;
+
+  color: #ffffff;
+}
+
+/* =========================
+   DATOS DEL USUARIO
+   ========================= */
+
+.datosUsuario {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.datosUsuario p {
+  margin: 0;
+}
+
+.datosUsuario p:first-child {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.datosUsuario p:last-child {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.botonMenu {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -7px;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.botonMenu:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.botonMenu:active {
+  background-color: #f3f4f6;
+}
+
+.iconHamburguesa {
+  width: 22px;
+  height: 22px;
+  color: #4b5563;
 }

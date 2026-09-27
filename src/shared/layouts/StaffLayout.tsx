@@ -4,14 +4,14 @@ import Sidebar from "../components/layout/Sidebar/sidebar";
 
 export default function StaffLayout() {
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+    <div >
   
       <Sidebar />
 
-      <main style={{ flex: 1, overflow: "auto" }}>
+      
         <BarraSuperior/>
         <Outlet />
-      </main>
+      
     </div>
   );
 }     

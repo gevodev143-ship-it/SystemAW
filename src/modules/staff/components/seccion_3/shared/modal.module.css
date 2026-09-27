@@ -1,0 +1,33 @@
+.menuDesplegable{
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 10;
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    min-width: 170px;
+    padding: 6px;
+}
+
+.menuDesplegable button{
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #374151;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.menuDesplegable button:hover{
+    background-color: #F3F4F6;
+}
+
+.itemEliminar{
+    color: #DC2626 !important;
+}

@@ -1,7 +1,5 @@
 npm install react-router-dom
-npm install @supabase/supabase-js
-npm install qrcode.react
-npm install html-to-image
+npm install @supabase/supabase-js   
 npm install exceljs
 
 /map
@@ -15,4 +13,5 @@ npm install -D @types/babel__standalone
 /attendance
 npm install --save-dev @types/react
 
+/ creacion de qr 
 npm install react-qr-code html2canvas

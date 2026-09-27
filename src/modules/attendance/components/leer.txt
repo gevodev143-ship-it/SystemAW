@@ -1,3 +1,7 @@
 seccion_1 es el fondo 
 seccion_2 es logo y la descripción parte izquierda
 seccion_3 es el modal de login parte derecha
+
+se extrera el dni y se buscara en la tabla staffs filtrando por el cust_id = 10 
+se extraera el id del estaff relacionado a el dni , si en caso solo hay un registro con ese dni entonces registraras su asistencia en la columna attendance
+pero si en caso hay 2 o mas stff_id que coinciden con el mismo  stff_dni del cust_id = 10 entonces le manadaras un mensaje de que otra personal tiene el mismo dni 

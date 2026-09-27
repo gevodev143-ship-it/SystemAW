@@ -246,7 +246,7 @@ const Sidebar = () => {
                 </NavLink>
 
                 <NavLink
-                  to="/staff"
+                  to="/organizational-chart"
                   className={({ isActive }) =>
                     isActive
                       ? `${style.link} ${style.linkActivo}`
@@ -257,18 +257,18 @@ const Sidebar = () => {
                   Organigrama
                 </NavLink>
                 <NavLink
-                  to="/job_position"
+                  to="/job-position"
                   className={({ isActive }) =>
                     isActive
                       ? `${style.link} ${style.linkActivo}`
                       : style.link
                   }
                 >
-                  <icon.iconCargo className={style.iconGlobo1} />
+                  <icon.iconUser className={style.iconGlobo1} />
                   Cargo
                 </NavLink>
                 <NavLink
-                  to="/staff"
+                  to="/roles"
                   className={({ isActive }) =>
                     isActive
                       ? `${style.link} ${style.linkActivo}`
@@ -289,6 +289,28 @@ const Sidebar = () => {
                 >
                   <icon.iconAsistencia className={style.iconGlobo} />
                   Asistencia
+                </NavLink>
+                {/* <NavLink
+                  to="/fotocheck"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                  <icon.iconCargo className={style.iconGlobo} />
+                  Fotocheck
+                </NavLink> */}
+                <NavLink
+                  to="/logos"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${style.link} ${style.linkActivo}`
+                      : style.link
+                  }
+                >
+                  <icon.iconLogo className={style.iconGlobo} />
+                  Logo
                 </NavLink>
               </>
             )}

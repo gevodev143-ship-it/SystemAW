@@ -8,43 +8,31 @@
   z-index: 1000;
 }
 
-.modal {
+.contenido {
   background: #fff;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 420px;
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 300px;
+  max-width: 90vw;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.closeBtn {
+.cerrar {
   background: none;
   border: none;
-  font-size: 1.4rem;
-  line-height: 1;
+  font-size: 24px;
   cursor: pointer;
-  color: #6b7280;
+  line-height: 1;
 }
 
-.closeBtn:hover {
-  color: #111827;
-}
-
-.body {
-  padding: 20px;
+.body p {
+  margin: 6px 0;
 }

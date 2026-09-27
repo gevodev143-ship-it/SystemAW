@@ -7,7 +7,6 @@ interface JobPositionCustomer {
   jb_pstn_cust_id: number;
   jb_pstn_cust_name: string;
   jb_pstn_cust_description: string | null;
-  jb_pstn_cust_parent_id: number | null;
   cust_id: number;
 }
 
@@ -19,20 +18,27 @@ const Seccion_1 = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Modal crear/editar
+  // =========================================================
+  // MODAL CREAR / EDITAR
+  // =========================================================
+
   const [showModal, setShowModal] = useState(false);
-  const [editando, setEditando] = useState<JobPositionCustomer | null>(null);
+  const [editando, setEditando] =
+    useState<JobPositionCustomer | null>(null);
+
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [parentId, setParentId] = useState<number | "">("");
   const [saving, setSaving] = useState(false);
 
   // =========================================================
-  // RESOLVER cust_id A PARTIR DE LA SESIÓN (mismo patrón del Sidebar)
+  // RESOLVER cust_id A PARTIR DE LA SESIÓN
   // =========================================================
+
   useEffect(() => {
     const resolverCustId = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
+      const { data: sessionData } =
+        await supabase.auth.getSession();
+
       const user = sessionData.session?.user;
 
       if (!user) {
@@ -41,13 +47,19 @@ const Seccion_1 = () => {
         return;
       }
 
-      const { data: customer, error: customerError } = await supabase
-        .from("customers")
-        .select("cust_id")
-        .eq("cust_auth_id", user.id)
-        .maybeSingle();
+      const { data: customer, error: customerError } =
+        await supabase
+          .from("customers")
+          .select("cust_id")
+          .eq("cust_auth_id", user.id)
+          .maybeSingle();
 
       if (customerError || !customer) {
+        console.error(
+          "ERROR AL OBTENER CUSTOMER:",
+          customerError
+        );
+
         localStorage.removeItem("aw_erp_jwt");
         navigate("/login");
         return;
@@ -60,20 +72,32 @@ const Seccion_1 = () => {
   }, [navigate]);
 
   // =========================================================
-  // LEER (SELECT) — solo cargos de este cliente
+  // LEER CARGOS DEL CLIENTE
   // =========================================================
+
   const fetchCargos = async (id: number) => {
     setLoading(true);
     setError("");
 
     const { data, error } = await supabase
       .from("job_position_customers")
-      .select("*")
+      .select(`
+        jb_pstn_cust_id,
+        jb_pstn_cust_name,
+        jb_pstn_cust_description,
+        cust_id
+      `)
       .eq("cust_id", id)
-      .order("jb_pstn_cust_id", { ascending: true });
+      .order("jb_pstn_cust_id", {
+        ascending: true,
+      });
 
     if (error) {
-      console.error("ERROR AL OBTENER CARGOS:", error);
+      console.error(
+        "ERROR AL OBTENER CARGOS:",
+        error
+      );
+
       setError("No se pudieron cargar los cargos.");
     } else {
       setCargos(data ?? []);
@@ -83,51 +107,59 @@ const Seccion_1 = () => {
   };
 
   useEffect(() => {
-    if (custId !== null) fetchCargos(custId);
+    if (custId !== null) {
+      fetchCargos(custId);
+    }
   }, [custId]);
 
-  const nombrePadre = (id: number | null) => {
-    if (!id) return "— (cargo raíz)";
-    const padre = cargos.find((c) => c.jb_pstn_cust_id === id);
-    return padre ? padre.jb_pstn_cust_name : "—";
-  };
+  // =========================================================
+  // ABRIR MODAL PARA CREAR
+  // =========================================================
 
   const abrirCrear = () => {
     setEditando(null);
     setNombre("");
     setDescripcion("");
-    setParentId("");
     setError("");
     setShowModal(true);
   };
+
+  // =========================================================
+  // ABRIR MODAL PARA EDITAR
+  // =========================================================
 
   const abrirEditar = (cargo: JobPositionCustomer) => {
     setEditando(cargo);
     setNombre(cargo.jb_pstn_cust_name);
-    setDescripcion(cargo.jb_pstn_cust_description ?? "");
-    setParentId(cargo.jb_pstn_cust_parent_id ?? "");
+    setDescripcion(
+      cargo.jb_pstn_cust_description ?? ""
+    );
     setError("");
     setShowModal(true);
   };
 
+  // =========================================================
+  // CERRAR MODAL
+  // =========================================================
+
   const cerrarModal = () => {
     setShowModal(false);
     setEditando(null);
+    setNombre("");
+    setDescripcion("");
+    setError("");
   };
 
   // =========================================================
-  // CREAR / ACTUALIZAR (INSERT / UPDATE)
+  // CREAR / ACTUALIZAR CARGO
   // =========================================================
+
   const handleGuardar = async () => {
     if (!custId) return;
 
+    // Validar nombre
     if (!nombre.trim()) {
       setError("El nombre del cargo es obligatorio.");
-      return;
-    }
-
-    if (editando && parentId === editando.jb_pstn_cust_id) {
-      setError("Un cargo no puede ser su propio cargo superior.");
       return;
     }
 
@@ -136,184 +168,327 @@ const Seccion_1 = () => {
 
     const payload = {
       jb_pstn_cust_name: nombre.trim(),
-      jb_pstn_cust_description: descripcion.trim() || null,
-      jb_pstn_cust_parent_id: parentId === "" ? null : parentId,
+      jb_pstn_cust_description:
+        descripcion.trim() || null,
     };
+
+    // =======================================================
+    // ACTUALIZAR
+    // =======================================================
 
     if (editando) {
       const { error } = await supabase
         .from("job_position_customers")
         .update(payload)
-        .eq("jb_pstn_cust_id", editando.jb_pstn_cust_id)
+        .eq(
+          "jb_pstn_cust_id",
+          editando.jb_pstn_cust_id
+        )
         .eq("cust_id", custId);
 
       if (error) {
-        console.error("ERROR AL ACTUALIZAR CARGO:", error);
-        setError("No se pudo actualizar. ¿Nombre duplicado para este cliente?");
+        console.error(
+          "ERROR AL ACTUALIZAR CARGO:",
+          error
+        );
+
+        setError(
+          "No se pudo actualizar. ¿Nombre duplicado para este cliente?"
+        );
+
         setSaving(false);
         return;
       }
-    } else {
-      const { error } = await supabase.from("job_position_customers").insert({
-        ...payload,
-        cust_id: custId,
-      });
+    }
+
+    // =======================================================
+    // CREAR
+    // =======================================================
+
+    else {
+      const { error } = await supabase
+        .from("job_position_customers")
+        .insert({
+          ...payload,
+          cust_id: custId,
+        });
 
       if (error) {
-        console.error("ERROR AL CREAR CARGO:", error);
-        setError("No se pudo crear. ¿Nombre duplicado para este cliente?");
+        console.error(
+          "ERROR AL CREAR CARGO:",
+          error
+        );
+
+        setError(
+          "No se pudo crear. ¿Nombre duplicado para este cliente?"
+        );
+
         setSaving(false);
         return;
       }
     }
 
     setSaving(false);
+
     cerrarModal();
-    fetchCargos(custId);
+
+    await fetchCargos(custId);
   };
 
   // =========================================================
-  // ELIMINAR (DELETE)
+  // ELIMINAR CARGO
   // =========================================================
-  const handleEliminar = async (cargo: JobPositionCustomer) => {
+
+  const handleEliminar = async (
+    cargo: JobPositionCustomer
+  ) => {
     if (!custId) return;
 
     const confirmar = window.confirm(
-      `¿Seguro que deseas eliminar el cargo "${cargo.jb_pstn_cust_name}"? ` +
-      `Los cargos que dependan de él quedarán sin cargo superior.`
+      `¿Seguro que deseas eliminar el cargo "${cargo.jb_pstn_cust_name}"?`
     );
+
     if (!confirmar) return;
 
     const { error } = await supabase
       .from("job_position_customers")
       .delete()
-      .eq("jb_pstn_cust_id", cargo.jb_pstn_cust_id)
+      .eq(
+        "jb_pstn_cust_id",
+        cargo.jb_pstn_cust_id
+      )
       .eq("cust_id", custId);
 
     if (error) {
-      console.error("ERROR AL ELIMINAR CARGO:", error);
-      alert("No se pudo eliminar el cargo. Puede estar en uso.");
+      console.error(
+        "ERROR AL ELIMINAR CARGO:",
+        error
+      );
+
+      alert(
+        "No se pudo eliminar el cargo. Puede estar en uso por algún trabajador."
+      );
+
       return;
     }
 
-    fetchCargos(custId);
+    await fetchCargos(custId);
   };
+
+  // =========================================================
+  // CARGANDO CUSTOMER
+  // =========================================================
 
   if (loading && custId === null) {
     return null;
   }
 
+  // =========================================================
+  // INTERFAZ
+  // =========================================================
+
   return (
     <div className={style.seccion}>
+
+      {/* =====================================================
+          ENCABEZADO
+      ====================================================== */}
+
       <div className={style.encabezado}>
+
         <div>
           <h2>
             <b>Cargos Personalizados</b>
           </h2>
-          <p>Administra los cargos propios de tu empresa (Administrador, Asistente Contable, Almacenero, etc.)</p>
+
+          <p>
+            Administra los cargos propios de tu empresa
+            (Administrador, Asistente Contable,
+            Almacenero, etc.).
+          </p>
         </div>
-        <button className={style.botonCrear} onClick={abrirCrear}>
+
+        <button
+          className={style.botonCrear}
+          onClick={abrirCrear}
+        >
           + Crear Cargo
         </button>
+
       </div>
 
-      {error && !showModal && <span className={style.textoError}>{error}</span>}
+      {/* =====================================================
+          ERROR GENERAL
+      ====================================================== */}
+
+      {error && !showModal && (
+        <span className={style.textoError}>
+          {error}
+        </span>
+      )}
+
+      {/* =====================================================
+          TABLA
+      ====================================================== */}
 
       {loading ? (
         <p>Cargando cargos...</p>
       ) : (
         <table className={style.tabla}>
+
           <thead>
             <tr>
               <th>ID</th>
               <th>Nombre</th>
               <th>Descripción</th>
-              <th>Cargo Superior</th>
               <th>Acciones</th>
             </tr>
           </thead>
+
           <tbody>
+
             {cargos.length === 0 ? (
               <tr>
-                <td colSpan={5}>No hay cargos registrados.</td>
+                <td colSpan={4}>
+                  No hay cargos registrados.
+                </td>
               </tr>
             ) : (
               cargos.map((cargo) => (
-                <tr key={cargo.jb_pstn_cust_id}>
-                  <td>{cargo.jb_pstn_cust_id}</td>
-                  <td>{cargo.jb_pstn_cust_name}</td>
-                  <td>{cargo.jb_pstn_cust_description || "—"}</td>
-                  <td>{nombrePadre(cargo.jb_pstn_cust_parent_id)}</td>
+                <tr
+                  key={cargo.jb_pstn_cust_id}
+                >
+
+                  <td>
+                    {cargo.jb_pstn_cust_id}
+                  </td>
+
+                  <td>
+                    {cargo.jb_pstn_cust_name}
+                  </td>
+
+                  <td>
+                    {cargo.jb_pstn_cust_description ||
+                      "—"}
+                  </td>
+
                   <td className={style.acciones}>
-                    <button onClick={() => abrirEditar(cargo)}>Editar</button>
+
                     <button
-                      className={style.botonEliminar}
-                      onClick={() => handleEliminar(cargo)}
+                      onClick={() =>
+                        abrirEditar(cargo)
+                      }
+                    >
+                      Editar
+                    </button>
+
+                    <button
+                      className={
+                        style.botonEliminar
+                      }
+                      onClick={() =>
+                        handleEliminar(cargo)
+                      }
                     >
                       Eliminar
                     </button>
+
                   </td>
+
                 </tr>
               ))
             )}
+
           </tbody>
+
         </table>
       )}
 
+      {/* =====================================================
+          MODAL CREAR / EDITAR
+      ====================================================== */}
+
       {showModal && (
         <div className={style.modalOverlay}>
-          <div className={style.modalContenido}>
-            <h3>{editando ? "Editar Cargo" : "Crear Cargo"}</h3>
 
-            <label className={style.label}>Nombre</label>
+          <div className={style.modalContenido}>
+
+            <h3>
+              {editando
+                ? "Editar Cargo"
+                : "Crear Cargo"}
+            </h3>
+
+            {/* NOMBRE */}
+
+            <label className={style.label}>
+              Nombre
+            </label>
+
             <input
               className={style.input}
               value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              onChange={(e) =>
+                setNombre(e.target.value)
+              }
+              placeholder="Ej. Administrador"
             />
 
-            <label className={style.label}>Descripción</label>
+            {/* DESCRIPCIÓN */}
+
+            <label className={style.label}>
+              Descripción
+            </label>
+
             <textarea
               className={style.textarea}
               value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
+              onChange={(e) =>
+                setDescripcion(e.target.value)
+              }
+              placeholder="Describe las funciones del cargo..."
             />
 
-            <label className={style.label}>Cargo Superior</label>
-            <select
-              className={style.input}
-              value={parentId}
-              onChange={(e) =>
-                setParentId(e.target.value === "" ? "" : Number(e.target.value))
-              }
+            {/* ERROR */}
+
+            {error && (
+              <span
+                className={style.textoError}
+              >
+                {error}
+              </span>
+            )}
+
+            {/* ACCIONES */}
+
+            <div
+              className={style.modalAcciones}
             >
-              <option value="">— Sin cargo superior (raíz) —</option>
-              {cargos
-                .filter((c) => !editando || c.jb_pstn_cust_id !== editando.jb_pstn_cust_id)
-                .map((c) => (
-                  <option key={c.jb_pstn_cust_id} value={c.jb_pstn_cust_id}>
-                    {c.jb_pstn_cust_name}
-                  </option>
-                ))}
-            </select>
 
-            {error && <span className={style.textoError}>{error}</span>}
-
-            <div className={style.modalAcciones}>
-              <button onClick={cerrarModal} disabled={saving}>
+              <button
+                onClick={cerrarModal}
+                disabled={saving}
+              >
                 Cancelar
               </button>
+
               <button
                 className={style.botonCrear}
                 onClick={handleGuardar}
                 disabled={saving}
               >
-                {saving ? "Guardando..." : "Guardar"}
+                {saving
+                  ? "Guardando..."
+                  : "Guardar"}
               </button>
+
             </div>
+
           </div>
+
         </div>
       )}
+
     </div>
   );
 };

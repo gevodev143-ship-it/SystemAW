@@ -1,0 +1,65 @@
+si solo un components/seccion_1 usa ese modal entonces va dentro de ese seccion_1 pero si lo utilizan otros components entonces va a components/shared/modal
+
+
+src/
+├── app/
+│   ├── router/
+│   │   └── AppRoutes.tsx
+│   └── App.tsx
+│
+├── assets/
+|   ├── css/
+|   └── img/
+│
+├── core/
+|   ├── contexts/
+|   ├── icons/
+|   ├── services/
+|   └── types/
+│
+├── lib/
+|   └── supabase.ts
+│
+├── modules/
+│   ├── staff/
+|   |   ├── components/
+|   |   |   ├── shared/
+|   |   |   |   └── modal/
+|   |   |   |   
+|   |   |   ├── seccion_1/
+|   |   |   |   ├── shared/
+|   |   |   |   |     └── modal/
+|   |   |   |   ├── seccion_1.tsx
+|   |   |   |   └── seccion_1.module.css
+|   |   |   |   
+|   |   |   └── seccion_2/
+|   |   |   
+|   |   ├── controllers/
+|   |   |       └── staff.controller.ts
+|   |   |
+|   |   ├── pages/
+|   |   ├── routes/
+|   |   ├── services/
+|   │   └── types/
+|   |
+│   └── ejemplo_modulo/
+|       ├── components/
+|       ├── controllers/
+|       ├── pages/
+|       ├── routes/
+|       ├── services/
+|       └── types/
+│
+└── shared/
+    ├── components/
+    │   └── layout/
+    │       ├── Sidebar/
+    │       └── BarraSuperior/
+    │
+    ├── layouts/
+    │   |── MainLayout.tsx (todo lo que esta dentro del sistema)
+    │   |── LoginLayout.tsx (la parte que se muestra para el publico)
+    │   └── HomeLayout.tsx (la parte que se muestra para el publico)
+    │
+    ├── styles/
+    └── utils/

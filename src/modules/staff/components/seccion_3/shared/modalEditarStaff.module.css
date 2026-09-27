@@ -1,0 +1,133 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal {
+    position: relative;
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    width: 420px;
+    max-width: 90vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    font-family: "Inter", sans-serif;
+    box-sizing: border-box;
+}
+
+.encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.titulo {
+    font-size: 17px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.botonCerrar {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #9CA3AF;
+    cursor: pointer;
+}
+
+.botonCerrar:hover {
+    color: #4B5563;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+}
+
+.etiqueta {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.input {
+    padding: 8px 10px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #111827;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #9CA3AF;
+}
+
+.errorCampo {
+    font-size: 12px;
+    color: #DC2626;
+}
+
+.errorGeneral {
+    font-size: 13px;
+    color: #DC2626;
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 14px;
+}
+
+.acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.botonCancelar,
+.botonGuardar {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+}
+
+.botonCancelar {
+    background-color: #F3F4F6;
+    color: #374151;
+}
+
+.botonCancelar:hover {
+    background-color: #E5E7EB;
+}
+
+.botonGuardar {
+    background-color: #111827;
+    color: white;
+}
+
+.botonGuardar:hover {
+    background-color: #1F2937;
+}
+
+.botonCancelar:disabled,
+.botonGuardar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

@@ -1,0 +1,183 @@
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  width: 100%;
+}
+
+.error {
+  background-color: #fdecea;
+  color: #b3261e;
+  border: 1px solid #f5c2bd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ---------- Formulario ---------- */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 480px;
+}
+
+.formulario h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.formulario input[type="text"],
+.formulario textarea {
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.formulario input[type="text"]:focus,
+.formulario textarea:focus {
+  border-color: #2f6fed;
+}
+
+.formulario textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.formulario input[type="file"] {
+  font-size: 13px;
+}
+
+.accionesFormulario {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.accionesFormulario button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.accionesFormulario button:first-child {
+  background-color: #2f6fed;
+  color: #ffffff;
+}
+
+.accionesFormulario button:first-child:hover:not(:disabled) {
+  background-color: #2559c7;
+}
+
+.accionesFormulario button:last-child {
+  background-color: #e8e8e8;
+  color: #333333;
+}
+
+.accionesFormulario button:last-child:hover:not(:disabled) {
+  background-color: #d8d8d8;
+}
+
+.accionesFormulario button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Listado ---------- */
+
+.listado {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.tarjetaLogo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.15s ease;
+}
+
+.tarjetaLogo:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logoImagen {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.logoNombre {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.logoDescripcion {
+  margin: 0;
+  font-size: 13px;
+  color: #666666;
+  line-height: 1.4;
+}
+
+.accionesTarjeta {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.accionesTarjeta button {
+  flex: 1;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.accionesTarjeta button:first-child {
+  background-color: #eef3ff;
+  color: #2f6fed;
+}
+
+.accionesTarjeta button:first-child:hover {
+  background-color: #dde8ff;
+}
+
+.accionesTarjeta button:last-child {
+  background-color: #fdecea;
+  color: #b3261e;
+}
+
+.accionesTarjeta button:last-child:hover {
+  background-color: #fadbd7;
+}

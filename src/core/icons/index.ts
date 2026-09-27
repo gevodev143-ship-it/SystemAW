@@ -28,6 +28,8 @@ import { iconBell } from "./bell";
 import { iconOrganigrama } from "./organigrama";
 import { iconRol } from "./rol";
 import { iconCargo } from "./cargo";
+import { iconMenu } from "./menu";
+import { iconLogo } from "./logo";
 
 export const icon = {
   iconHojaPaper,
@@ -59,5 +61,7 @@ export const icon = {
   iconBell,
   iconOrganigrama,
   iconRol,
-  iconCargo
+  iconCargo,
+  iconMenu,
+  iconLogo,
 };
