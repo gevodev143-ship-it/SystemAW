@@ -1,6 +1,7 @@
 import { supabase } from "../../lib/supabase";
 import type {
   Staff,
+  StaffCargoResumen,
   StaffFilters,
   StaffInsert,
   StaffListItem,
@@ -154,7 +155,17 @@ export const listStaff = async (
     throw error;
   }
 
-  return { data: (data ?? []) as StaffListItem[], count: count ?? 0 };
+  const filas: StaffListItem[] = (data ?? []).map((fila) => {
+    const cargo = fila.job_position_customers as unknown;
+    return {
+      ...fila,
+      job_position_customers: Array.isArray(cargo)
+        ? ((cargo[0] as StaffCargoResumen | undefined) ?? null)
+        : ((cargo as StaffCargoResumen | null) ?? null),
+    };
+  });
+
+  return { data: filas, count: count ?? 0 };
 };
 
 // ---------------------------------------------------------------------------
