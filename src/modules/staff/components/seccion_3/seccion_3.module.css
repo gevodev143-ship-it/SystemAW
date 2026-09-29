@@ -103,3 +103,28 @@
 .foto, .fotoVacia{
     cursor: pointer;
 }
+/* Recorta solo en horizontal para no cortar el menú ⋮ de las últimas filas */
+.tablaViewport{
+    overflow-x: clip;
+}
+
+.tablaPagina{
+    animation: entrarPagina 0.35s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+
+@keyframes entrarPagina{
+    from{
+        opacity: 0;
+        transform: translateX(calc(var(--dir, 1) * 32px));
+    }
+    to{
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .tablaPagina{
+        animation: none;
+    }
+}

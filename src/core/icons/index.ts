@@ -30,6 +30,7 @@ import { iconRol } from "./rol";
 import { iconCargo } from "./cargo";
 import { iconMenu } from "./menu";
 import { iconLogo } from "./logo";
+import { iconCarpeta } from "./carpeta";
 
 export const icon = {
   iconHojaPaper,
@@ -64,4 +65,5 @@ export const icon = {
   iconCargo,
   iconMenu,
   iconLogo,
+  iconCarpeta,
 };

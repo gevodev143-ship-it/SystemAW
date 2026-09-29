@@ -7,7 +7,6 @@ const Seccion_1 = () => {
 
   const handleCreado = () => {
     setShowModal(false);
-    // Aquí luego puedes refrescar una tabla de personales si la agregas
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import style from "./sidebar.module.css";
 import { supabase } from "../../../../lib/supabase";
@@ -9,37 +9,99 @@ interface ExtensionMenuItem {
   extns_name: string;
 }
 
+// Clase compartida para todos los NavLink
+const navClass = ({ isActive }: { isActive: boolean }) =>
+  isActive ? `${style.link} ${style.linkActivo}` : style.link;
+
+type CollapsibleProps = {
+  id: string;
+  title: string;
+  icon: ReactNode;
+  open: boolean;
+  onToggle: () => void;
+  nested?: boolean; // true = sección dentro de un módulo (ej. Personal)
+  children: ReactNode;
+};
+
+const Collapsible = ({
+  id,
+  title,
+  icon: sectionIcon,
+  open,
+  onToggle,
+  nested = false,
+  children,
+}: CollapsibleProps) => {
+  const headerClass = nested
+    ? `${style.tituloNested} ${style.tituloClickable}`
+    : `${style.tituloSeccion} ${style.tituloClickable}`;
+
+  const headerProps = {
+    className: headerClass,
+    role: "button",
+    tabIndex: 0,
+    "aria-expanded": open,
+    "aria-controls": id,
+    onClick: onToggle,
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onToggle();
+      }
+    },
+  };
+
+  const content = (
+    <>
+      {sectionIcon}
+      {nested ? <span>{title}</span> : <b>{title}</b>}
+      <span className={style.botonArrow} aria-hidden="true">
+        <icon.iconArrowDown
+          className={`${style.iconArrowDown} ${
+            open ? style.iconArrowDownOpen : ""
+          }`}
+        />
+      </span>
+    </>
+  );
+
+  return (
+    <>
+      {/* Los módulos usan <p> (estilo de título); las secciones usan <div> (estilo de link) */}
+      {nested ? (
+        <div {...headerProps}>{content}</div>
+      ) : (
+        <p {...headerProps}>{content}</p>
+      )}
+
+      <div
+        id={id}
+        className={`${style.submenu} ${open ? style.submenuOpen : ""}`}
+      >
+        <div className={style.submenuInner}>{children}</div>
+      </div>
+    </>
+  );
+};
+
 const Sidebar = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
+  const [canPersonalDevelopment, setCanPersonalDevelopment] = useState(false);
+  const [canBusinessManagement, setCanBusinessManagement] = useState(false);
+  const [canDigitalManagement, setCanDigitalManagement] = useState(false);
 
-  const [canPersonalDevelopment, setCanPersonalDevelopment] =
-    useState(false);
-
-  const [canBusinessManagement, setCanBusinessManagement] =
-    useState(false);
-
-  // NUEVO: bandera propia para Gestión Digital, ya no depende de las otras dos
-  const [canDigitalManagement, setCanDigitalManagement] =
-    useState(false);
-
-  // Extensiones dinámicas del cliente logueado
   const [extensions, setExtensions] = useState<ExtensionMenuItem[]>([]);
 
-  // Estados de los menús desplegables
-  const [businessManagementOpen, setBusinessManagementOpen] =
-    useState(true);
+  const [businessManagementOpen, setBusinessManagementOpen] = useState(true);
+  const [extensionsOpen, setExtensionsOpen] = useState(false);
+  const [digitalManagementOpen, setDigitalManagementOpen] = useState(false);
 
-  const [extensionsOpen, setExtensionsOpen] =
-    useState(false);
-
-  const [digitalManagementOpen, setDigitalManagementOpen] =
-    useState(false);
+  const [personalOpen, setPersonalOpen] = useState(false);
 
   useEffect(() => {
     const cargarPermisos = async () => {
-      // 1. Verificar que haya una sesión activa
       const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData.session?.user;
 
@@ -49,7 +111,6 @@ const Sidebar = () => {
         return;
       }
 
-      // 2. Buscar el customer asociado al usuario
       const { data: customer, error: customerError } = await supabase
         .from("customers")
         .select("cust_id")
@@ -64,9 +125,6 @@ const Sidebar = () => {
 
       const { cust_id } = customer;
 
-      // 3. Buscar los módulos activos asignados a este cliente
-      // Se filtra tanto cust_mod_is_active (activo para este cliente)
-      // como mod_is_active (módulo habilitado a nivel global)
       const { data: custModules, error: modulesError } = await supabase
         .from("customer_modules")
         .select("mod_id, modules(mod_name, mod_is_active)")
@@ -84,19 +142,10 @@ const Sidebar = () => {
         .map((cm: any) => cm.modules?.mod_name)
         .filter(Boolean);
 
-      setCanPersonalDevelopment(
-        nombresModulos.includes("Desarrollo Personal")
-      );
+      setCanPersonalDevelopment(nombresModulos.includes("Desarrollo Personal"));
+      setCanBusinessManagement(nombresModulos.includes("Gestión Empresarial"));
+      setCanDigitalManagement(nombresModulos.includes("Gestión Digital"));
 
-      setCanBusinessManagement(
-        nombresModulos.includes("Gestión Empresarial")
-      );
-
-      setCanDigitalManagement(
-        nombresModulos.includes("Gestión Digital")
-      );
-
-      // 4. Traer las extensiones activas de este cliente
       const { data: extensionsData, error: extError } = await supabase
         .from("extensions")
         .select("extns_id, extns_name")
@@ -118,18 +167,12 @@ const Sidebar = () => {
     return null;
   }
 
-  // Si el cliente no tiene ningún módulo activo, no mostramos nada de contenido
   const tieneAlgunModulo =
-    canPersonalDevelopment ||
-    canBusinessManagement ||
-    canDigitalManagement;
+    canPersonalDevelopment || canBusinessManagement || canDigitalManagement;
 
   return (
     <div className={style.sidebar}>
-      {/* ================================= */}
       {/* LOGO */}
-      {/* ================================= */}
-
       <section className={style.seccion1}>
         <div className={style.logo}>
           <img src="/logo.png" alt="" />
@@ -143,327 +186,133 @@ const Sidebar = () => {
       </section>
 
       <section className={style.seccion2}>
-        {/* ================================= */}
         {/* DESARROLLO PERSONAL */}
-        {/* ================================= */}
-
         {canPersonalDevelopment && (
           <>
             <p>
               <b>Desarrollo Personal</b>
             </p>
 
-            <NavLink
-              to="/habits"
-              className={({ isActive }) =>
-                isActive ? `${style.link} ${style.linkActivo}` : style.link
-              }
-            >
+            <NavLink to="/habits" className={navClass}>
               Hábitos
             </NavLink>
-
-            <NavLink
-              to="/historys"
-              className={({ isActive }) =>
-                isActive ? `${style.link} ${style.linkActivo}` : style.link
-              }
-            >
+            <NavLink to="/historys" className={navClass}>
               Historial
             </NavLink>
-
-            <NavLink
-              to="/templates"
-              className={({ isActive }) =>
-                isActive ? `${style.link} ${style.linkActivo}` : style.link
-              }
-            >
+            {/* OJO: estas 3 apuntan a la misma ruta, se activan a la vez */}
+            <NavLink to="/templates" className={navClass}>
               Progreso
             </NavLink>
-
-            <NavLink
-              to="/templates"
-              className={({ isActive }) =>
-                isActive ? `${style.link} ${style.linkActivo}` : style.link
-              }
-            >
+            <NavLink to="/templates" className={navClass}>
               Métricas
             </NavLink>
-
-            <NavLink
-              to="/templates"
-              className={({ isActive }) =>
-                isActive ? `${style.link} ${style.linkActivo}` : style.link
-              }
-            >
+            <NavLink to="/templates" className={navClass}>
               Biblioteca
             </NavLink>
           </>
         )}
 
-        {/* ================================= */}
-        {/* GESTIÓN EMPRESARIAL */}
-        {/* ================================= */}
-
+        {/* MÓDULO: GESTIÓN EMPRESARIAL */}
         {canBusinessManagement && (
-          <>
-            <p className={style.tituloSeccion}>
-              <icon.iconMaleta className={style.iconMaleta} />
+          <Collapsible
+            id="submenu-empresarial"
+            title="Gestión Empresarial"
+            icon={<icon.iconMaleta className={style.iconMaleta} />}
+            open={businessManagementOpen}
+            onToggle={() => setBusinessManagementOpen((v) => !v)}
+          >
+            {/* SECCIÓN: PERSONAL */}
+            <Collapsible
+              nested
+              id="submenu-personal"
+              title="Personal"
+              icon={<icon.iconUsers className={style.iconSub} />}
+              open={personalOpen}
+              onToggle={() => setPersonalOpen((v) => !v)}
+            >
+              <NavLink to="/staffs" className={navClass}>
+                <icon.iconUsers className={style.iconSub} />
+                Lista de personal
+              </NavLink>
+              <NavLink to="/organizational-chart" className={navClass}>
+                <icon.iconOrganigrama className={style.iconSub} />
+                Organigrama
+              </NavLink>
+              <NavLink to="/job-position" className={navClass}>
+                <icon.iconUser className={style.iconSub} />
+                Cargo
+              </NavLink>
+              <NavLink to="/roles" className={navClass}>
+                <icon.iconRol className={style.iconSub} />
+                Rol
+              </NavLink>
+            </Collapsible>
 
-              <b>Gestión Empresarial</b>
+            {/* SECCIÓN: ASISTENCIA */}
+            <NavLink to="/attendances" className={navClass}>
+              <icon.iconAsistencia className={style.iconSub} />
+              Asistencia
+            </NavLink>
 
-              <button
-                type="button"
-                className={style.botonArrow}
-                onClick={() =>
-                  setBusinessManagementOpen(!businessManagementOpen)
-                }
-                aria-label={
-                  businessManagementOpen
-                    ? "Ocultar Gestión Empresarial"
-                    : "Mostrar Gestión Empresarial"
-                }
-              >
-                <icon.iconArrowDown
-                  className={`${style.iconArrowDown} ${
-                    businessManagementOpen ? style.iconArrowDownOpen : ""
-                  }`}
-                />
-              </button>
-            </p>
-
-            {businessManagementOpen && (
-              <>
-                <NavLink
-                  to="/staffs"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconUsers className={style.iconGlobo} />
-                  Personal  
-                </NavLink>
-
-                <NavLink
-                  to="/organizational-chart"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconOrganigrama className={style.iconGlobo1} />
-                  Organigrama
-                </NavLink>
-                <NavLink
-                  to="/job-position"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconUser className={style.iconGlobo1} />
-                  Cargo
-                </NavLink>
-                <NavLink
-                  to="/roles"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconRol className={style.iconGlobo1} />
-                  Rol
-                </NavLink>
-
-                <NavLink
-                  to="/attendances"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconAsistencia className={style.iconGlobo} />
-                  Asistencia
-                </NavLink>
-                {/* <NavLink
-                  to="/fotocheck"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconCargo className={style.iconGlobo} />
-                  Fotocheck
-                </NavLink> */}
-                <NavLink
-                  to="/logos"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconLogo className={style.iconGlobo} />
-                  Logo
-                </NavLink>
-              </>
-            )}
-          </>
+            {/* SECCIÓN: ALMACENAMIENTO */}
+            <NavLink to="/logos" className={navClass}>
+              <icon.iconCarpeta className={style.iconSub} />
+              Almacenamiento
+            </NavLink>
+          </Collapsible>
         )}
-
-        {/* ================================= */}
+        
         {/* EXTENSIONES */}
-        {/* ================================= */}
-        {/* Se muestra si el cliente tiene cualquier módulo, ya que las
-            extensiones son transversales y no pertenecen a un módulo fijo */}
-
         {tieneAlgunModulo && extensions.length > 0 && (
-          <>
-            <p className={style.tituloSeccion}>
-              <icon.iconExtension className={style.iconMaleta} />
-
-              <b>Extensiones</b>
-
-              <button
-                type="button"
-                className={style.botonArrow}
-                onClick={() => setExtensionsOpen(!extensionsOpen)}
-                aria-label={
-                  extensionsOpen ? "Ocultar Extensiones" : "Mostrar Extensiones"
-                }
+          <Collapsible
+            id="submenu-extensiones"
+            title="Extensiones"
+            icon={<icon.iconExtension className={style.iconMaleta} />}
+            open={extensionsOpen}
+            onToggle={() => setExtensionsOpen((v) => !v)}
+          >
+            {extensions.map((ext) => (
+              <NavLink
+                key={ext.extns_id}
+                to={`/extensions/${encodeURIComponent(ext.extns_name)}`}
+                className={navClass}
               >
-                <icon.iconArrowDown
-                  className={`${style.iconArrowDown} ${
-                    extensionsOpen ? style.iconArrowDownOpen : ""
-                  }`}
-                />
-              </button>
-            </p>
-
-            {extensionsOpen && (
-              <>
-                {extensions.map((ext) => (
-                  <NavLink
-                    key={ext.extns_id}
-                    to={`/extensions/${encodeURIComponent(ext.extns_name)}`}
-                    className={({ isActive }) =>
-                      isActive
-                        ? `${style.link} ${style.linkActivo}`
-                        : style.link
-                    }
-                  >
-                    <icon.iconExtension className={style.iconGlobo} />
-                    {ext.extns_name}
-                  </NavLink>
-                ))}
-              </>
-            )}
-          </>
+                <icon.iconExtension className={style.iconSub} />
+                {ext.extns_name}
+              </NavLink>
+            ))}
+          </Collapsible>
         )}
 
-        {/* ================================= */}
         {/* GESTIÓN DIGITAL */}
-        {/* ================================= */}
-        {/* CORREGIDO: antes se mostraba con canPersonalDevelopment ||
-            canBusinessManagement, lo que la hacía visible aunque el cliente
-            NO tuviera contratado el módulo "Gestión Digital". Ahora depende
-            únicamente de canDigitalManagement. */}
-
         {canDigitalManagement && (
-          <>
-            <p className={style.tituloSeccion}>
-              <icon.iconGestionDigital className={style.iconMaleta} />
-
-              <b>Gestión Digital</b>
-
-              <button
-                type="button"
-                className={style.botonArrow}
-                onClick={() =>
-                  setDigitalManagementOpen(!digitalManagementOpen)
-                }
-                aria-label={
-                  digitalManagementOpen
-                    ? "Ocultar Gestión Digital"
-                    : "Mostrar Gestión Digital"
-                }
-              >
-                <icon.iconArrowDown
-                  className={`${style.iconArrowDown} ${
-                    digitalManagementOpen ? style.iconArrowDownOpen : ""
-                  }`}
-                />
-              </button>
-            </p>
-
-            {digitalManagementOpen && (
-              <>
-                <NavLink
-                  to="/web"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconGlobo className={style.iconGlobo} />
-                  Sitio Web
-                </NavLink>
-
-                <NavLink
-                  to="/mobile"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconMovil className={style.iconGlobo} />
-                  Aplicación Móvil
-                </NavLink>
-
-                <NavLink
-                  to="/appearance"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconPaleta className={style.iconGlobo} />
-                  Diseño y Apariencia
-                </NavLink>
-
-                <NavLink
-                  to="/configuration"
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${style.link} ${style.linkActivo}`
-                      : style.link
-                  }
-                >
-                  <icon.iconConfiguracion className={style.iconGlobo} />
-                  Configuración
-                </NavLink>
-              </>
-            )}
-          </>
+          <Collapsible
+            id="submenu-digital"
+            title="Gestión Digital"
+            icon={<icon.iconGestionDigital className={style.iconMaleta} />}
+            open={digitalManagementOpen}
+            onToggle={() => setDigitalManagementOpen((v) => !v)}
+          >
+            <NavLink to="/web" className={navClass}>
+              <icon.iconGlobo className={style.iconSub} />
+              Sitio Web
+            </NavLink>
+            <NavLink to="/mobile" className={navClass}>
+              <icon.iconMovil className={style.iconSub} />
+              Aplicación Móvil
+            </NavLink>
+            <NavLink to="/appearance" className={navClass}>
+              <icon.iconPaleta className={style.iconSub} />
+              Diseño y Apariencia
+            </NavLink>
+            <NavLink to="/configuration" className={navClass}>
+              <icon.iconConfiguracion className={style.iconSub} />
+              Configuración
+            </NavLink>
+          </Collapsible>
         )}
 
-        {/* ================================= */}
         {/* MAPA */}
-        {/* ================================= */}
-        {/* No corresponde a un módulo específico de la tabla `modules`,
-            así que se mantiene visible mientras el cliente tenga al menos
-            un módulo activo. Si "Mapa" debe pertenecer a un módulo concreto,
-            avísame cuál y lo condiciono igual que Gestión Digital. */}
-
         {tieneAlgunModulo && (
           <p className={style.tituloSeccion}>
             <NavLink to="/map" className={style.tituloSeccion}>
@@ -473,14 +322,19 @@ const Sidebar = () => {
           </p>
         )}
 
-        {/* ================================= */}
         {/* ANUNCIO */}
-        {/* ================================= */}
-
         {tieneAlgunModulo && (
           <p className={style.tituloSeccion}>
             <icon.iconAnuncio className={style.iconMaleta} />
             <b>Anuncio</b>
+          </p>
+        )}
+
+        {/* CONFIGURACIÓN */}
+        {tieneAlgunModulo && (
+          <p className={style.tituloSeccion}>
+            <icon.iconConfiguracion className={style.iconMaleta} />
+            <b>Configuración</b>
           </p>
         )}
       </section>

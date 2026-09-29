@@ -1,4 +1,6 @@
 // core/contexts/AuthContext.tsx
+// createContext es donde se guardara el id del cust
+// useContext 
 import { createContext, useContext, useEffect, useState} from "react";
 import type { ReactNode } from "react"
 import { supabase } from "../../lib/supabase";

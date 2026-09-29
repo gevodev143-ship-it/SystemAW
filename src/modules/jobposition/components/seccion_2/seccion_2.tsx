@@ -1,10 +1,10 @@
 import { icon } from "../../../../core/icons/";
-import type { RoleFilters } from "../../controllers/role.controller";
+import type { JobPositionFilters } from "../../controllers/jobposition.controller";
 import style from "./seccion_2.module.css";
 
 interface Seccion2Props {
-  filtros: RoleFilters;
-  onChange: (cambios: Partial<RoleFilters>) => void;
+  filtros: JobPositionFilters;
+  onChange: (cambios: Partial<JobPositionFilters>) => void;
 }
 
 const Seccion_2 = ({ filtros, onChange }: Seccion2Props) => {
@@ -16,7 +16,7 @@ const Seccion_2 = ({ filtros, onChange }: Seccion2Props) => {
           <input
             type="search"
             placeholder="Buscar por nombre o descripción"
-            aria-label="Buscar rol"
+            aria-label="Buscar cargo"
             value={filtros.busqueda}
             onChange={(e) => onChange({ busqueda: e.target.value })}
           />

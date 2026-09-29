@@ -5,28 +5,28 @@ import Modal, { type ModoModal } from "../seccion_1/shared/modal";
 
 import { useAuth } from "../../../../core/contexts/auth.context";
 import {
-  useRoleController,
-  type RoleFilters,
-} from "../../controllers/role.controller";
-import type { RoleCustomer } from "../../../../core/types";
+  useJobPositionController,
+  type JobPositionFilters,
+} from "../../controllers/jobposition.controller";
+import type { JobPositionCustomer } from "../../../../core/types";
 
 const TOTAL_COLUMNAS = 3;
 
 interface Seccion3Props {
-  filtros: RoleFilters;
+  filtros: JobPositionFilters;
   recargaKey: number;
 }
 
-interface AccionRol {
+interface AccionCargo {
   modo: Exclude<ModoModal, "crear">;
-  rol: RoleCustomer;
+  cargo: JobPositionCustomer;
 }
 
 const Seccion_3 = ({ filtros, recargaKey }: Seccion3Props) => {
   const { custId } = useAuth();
 
   const {
-    rolesPagina,
+    cargosPagina,
     loading,
     error,
     paginaActual,
@@ -34,9 +34,9 @@ const Seccion_3 = ({ filtros, recargaKey }: Seccion3Props) => {
     totalPaginas,
     itemsPorPagina,
     recargar,
-  } = useRoleController(filtros, recargaKey);
+  } = useJobPositionController(filtros, recargaKey);
 
-  const [accion, setAccion] = useState<AccionRol | null>(null);
+  const [accion, setAccion] = useState<AccionCargo | null>(null);
   // Dirección de la animación: 1 = avanzar, -1 = retroceder
   const [direccion, setDireccion] = useState<1 | -1>(1);
 
@@ -46,19 +46,19 @@ const Seccion_3 = ({ filtros, recargaKey }: Seccion3Props) => {
     setPaginaActual(nueva);
   };
 
-  const sinFilas = rolesPagina.length === 0;
+  const sinFilas = cargosPagina.length === 0;
 
   return (
     <div className={style.seccion}>
       {error && <span className={style.textoError}>{error}</span>}
 
       {sinFilas && loading ? (
-        <p>Cargando roles...</p>
+        <p>Cargando cargos...</p>
       ) : sinFilas ? (
         <p>
           {filtros.busqueda.trim() !== ""
             ? "No se encontraron resultados con los filtros aplicados."
-            : "No hay roles registrados."}
+            : "No hay cargos registrados."}
         </p>
       ) : (
         <>
@@ -79,22 +79,22 @@ const Seccion_3 = ({ filtros, recargaKey }: Seccion3Props) => {
                 </thead>
 
                 <tbody>
-                  {rolesPagina.map((rol) => (
-                    <tr key={rol.role_cust_id}>
-                      <td>{rol.role_cust_name}</td>
-                      <td>{rol.role_cust_description || "—"}</td>
+                  {cargosPagina.map((cargo) => (
+                    <tr key={cargo.jb_pstn_cust_id}>
+                      <td>{cargo.jb_pstn_cust_name}</td>
+                      <td>{cargo.jb_pstn_cust_description || "—"}</td>
                       <td className={style.acciones}>
                         <button
                           type="button"
                           className={style.botonAccion}
-                          onClick={() => setAccion({ modo: "editar", rol })}
+                          onClick={() => setAccion({ modo: "editar", cargo })}
                         >
                           Editar
                         </button>
                         <button
                           type="button"
                           className={style.botonAccion}
-                          onClick={() => setAccion({ modo: "eliminar", rol })}
+                          onClick={() => setAccion({ modo: "eliminar", cargo })}
                         >
                           Eliminar
                         </button>
@@ -103,7 +103,7 @@ const Seccion_3 = ({ filtros, recargaKey }: Seccion3Props) => {
                   ))}
 
                   {Array.from({
-                    length: Math.max(0, itemsPorPagina - rolesPagina.length),
+                    length: Math.max(0, itemsPorPagina - cargosPagina.length),
                   }).map((_, i) => (
                     <tr key={`vacia-${i}`} className={style.filaVacia}>
                       <td colSpan={TOTAL_COLUMNAS}>&nbsp;</td>
@@ -151,7 +151,7 @@ const Seccion_3 = ({ filtros, recargaKey }: Seccion3Props) => {
         <Modal
           modo={accion.modo}
           custId={custId}
-          rol={accion.rol}
+          cargo={accion.cargo}
           onClose={() => setAccion(null)}
           onGuardado={() => {
             setAccion(null);

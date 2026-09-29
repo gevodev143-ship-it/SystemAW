@@ -3,8 +3,8 @@ import style from "./modalEditarStaff.module.css";
 import {
   updateStaff,
   listAllStaffByCustomer,
-} from "../../../services/staff.service";
-import { obtenerCargosPorCliente } from "../../../services/job_position_customers.service";
+  obtenerCargosPorCliente,
+} from "../../../services/";
 import type { Staff } from "../../../types/staff.type";
 import type { JobPositionCustomer } from "../../../types/job-position.type";
 

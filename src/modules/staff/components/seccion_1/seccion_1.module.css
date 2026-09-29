@@ -9,6 +9,7 @@
 
 h2{
     font-family: "Inter", sans-serif;
+    color: #0B1A4C;
 }
 
 .boton {
@@ -39,4 +40,8 @@ h2{
     display: flex;
     align-items: center;
     font-size: 16px;
+}
+p{
+    color: #8a8989 ;
+    font-family: "Inter", sans-serif;
 }

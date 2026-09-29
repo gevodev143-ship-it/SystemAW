@@ -1,9 +1,43 @@
+import { useState } from "react";
 import style from "./seccion_1.module.css";
+import Modal from "./shared/modal";
+import { useAuth } from "../../../../core/contexts/auth.context";
 
-const Seccion_1 = () => {
+interface Seccion1Props {
+  onCreado: () => void;
+}
+
+const Seccion_1 = ({ onCreado }: Seccion1Props) => {
+  const { custId } = useAuth();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleGuardado = () => {
+    setShowModal(false);
+    onCreado();
+  };
+
   return (
     <div className={style.seccion}>
-      <p>hola</p>
+      <div>
+        <h2><b>Listado de Roles</b></h2>
+        <p>Administra y organiza los roles de tu empresa desde un solo lugar.</p>
+      </div>
+
+      <div>
+        <button className={style.boton} onClick={() => setShowModal(true)}>
+          <span className={style.icono}>⊕</span> Crear Rol
+        </button>
+      </div>
+
+      {showModal && custId !== null && (
+        <Modal
+          modo="crear"
+          custId={custId}
+          rol={null}
+          onClose={() => setShowModal(false)}
+          onGuardado={handleGuardado}
+        />
+      )}
     </div>
   );
 };
