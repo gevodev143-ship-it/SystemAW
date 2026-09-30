@@ -31,6 +31,7 @@ import { iconCargo } from "./cargo";
 import { iconMenu } from "./menu";
 import { iconLogo } from "./logo";
 import { iconCarpeta } from "./carpeta";
+import { iconPanelDistribution } from "./panel-distribution";
 
 export const icon = {
   iconHojaPaper,
@@ -66,4 +67,5 @@ export const icon = {
   iconMenu,
   iconLogo,
   iconCarpeta,
+  iconPanelDistribution,
 };

@@ -20,6 +20,7 @@ type CollapsibleProps = {
   open: boolean;
   onToggle: () => void;
   nested?: boolean; // true = sección dentro de un módulo (ej. Personal)
+  collapsed?: boolean; // true = sidebar colapsado (solo iconos)
   children: ReactNode;
 };
 
@@ -30,6 +31,7 @@ const Collapsible = ({
   open,
   onToggle,
   nested = false,
+  collapsed = false,
   children,
 }: CollapsibleProps) => {
   const headerClass = nested
@@ -40,6 +42,7 @@ const Collapsible = ({
     className: headerClass,
     role: "button",
     tabIndex: 0,
+    title: collapsed ? title : undefined, // tooltip al colapsar
     "aria-expanded": open,
     "aria-controls": id,
     onClick: onToggle,
@@ -54,7 +57,7 @@ const Collapsible = ({
   const content = (
     <>
       {sectionIcon}
-      {nested ? <span>{title}</span> : <b>{title}</b>}
+      {nested ? <span>{title}</span> : <b className={style.label}>{title}</b>}
       <span className={style.botonArrow} aria-hidden="true">
         <icon.iconArrowDown
           className={`${style.iconArrowDown} ${
@@ -99,6 +102,19 @@ const Sidebar = () => {
   const [digitalManagementOpen, setDigitalManagementOpen] = useState(false);
 
   const [personalOpen, setPersonalOpen] = useState(false);
+
+  const [collapsed, setCollapsed] = useState(false);
+
+  // Si está colapsado, al pulsar un módulo se expande y se abre ese módulo
+  const toggleModulo =
+    (setter: React.Dispatch<React.SetStateAction<boolean>>) => () => {
+      if (collapsed) {
+        setCollapsed(false);
+        setter(true);
+      } else {
+        setter((v) => !v);
+      }
+    };
 
   useEffect(() => {
     const cargarPermisos = async () => {
@@ -171,46 +187,82 @@ const Sidebar = () => {
     canPersonalDevelopment || canBusinessManagement || canDigitalManagement;
 
   return (
-    <div className={style.sidebar}>
-      {/* LOGO */}
+    <div className={`${style.sidebar} ${collapsed ? style.collapsed : ""}`}>
+      {/* CABECERA */}
       <section className={style.seccion1}>
-        <div className={style.logo}>
-          <img src="/logo.png" alt="" />
-        </div>
-
-        <div>
-          <p>
-            <b>System AW</b>
-          </p>
-        </div>
+        {collapsed ? (
+          <>
+            <div className={style.logo}>
+              <img src="/logo.png" alt="System AW" />
+            </div>
+            <button
+              type="button"
+              className={style.botonIcono}
+              onClick={() => setCollapsed(false)}
+              aria-label="Expandir menú"
+            >
+              <icon.iconPanelDistribution className={style.iconAccion} />
+            </button>
+          </>
+        ) : (
+          <>
+            <span className={style.nombre}>System AW</span>
+            <div className={style.acciones}>
+              <button
+                type="button"
+                className={style.botonIcono}
+                aria-label="Buscar"
+              >
+                <icon.iconLupa className={style.iconAccion} />
+              </button>
+              <button
+                type="button"
+                className={style.botonIcono}
+                onClick={() => setCollapsed(true)}
+                aria-label="Colapsar menú"
+              >
+                <icon.iconPanelDistribution className={style.iconAccion} />
+              </button>
+            </div>
+          </>
+        )}
       </section>
 
       <section className={style.seccion2}>
-        {/* DESARROLLO PERSONAL */}
-        {canPersonalDevelopment && (
-          <>
-            <p>
-              <b>Desarrollo Personal</b>
+        {/* DESARROLLO PERSONAL (sin icono propio: uso uno provisional al colapsar) */}
+        {canPersonalDevelopment &&
+          (collapsed ? (
+            <p
+              className={`${style.tituloSeccion} ${style.tituloClickable}`}
+              title="Desarrollo Personal"
+              onClick={() => setCollapsed(false)}
+            >
+              <icon.iconUser className={style.iconMaleta} />
             </p>
+          ) : (
+            <>
+              <p>
+                <b>Desarrollo Personal</b>
+              </p>
 
-            <NavLink to="/habits" className={navClass}>
-              Hábitos
-            </NavLink>
-            <NavLink to="/historys" className={navClass}>
-              Historial
-            </NavLink>
-            {/* OJO: estas 3 apuntan a la misma ruta, se activan a la vez */}
-            <NavLink to="/templates" className={navClass}>
-              Progreso
-            </NavLink>
-            <NavLink to="/templates" className={navClass}>
-              Métricas
-            </NavLink>
-            <NavLink to="/templates" className={navClass}>
-              Biblioteca
-            </NavLink>
-          </>
-        )}
+              <NavLink to="/habits" className={navClass}>
+                Hábitos
+              </NavLink>
+              <NavLink to="/historys" className={navClass}>
+                Historial
+              </NavLink>
+              {/* OJO: estas 3 apuntan a la misma ruta, se activan a la vez */}
+              <NavLink to="/templates" className={navClass}>
+                Progreso
+              </NavLink>
+              <NavLink to="/templates" className={navClass}>
+                Métricas
+              </NavLink>
+              <NavLink to="/templates" className={navClass}>
+                Biblioteca
+              </NavLink>
+            </>
+          ))}
 
         {/* MÓDULO: GESTIÓN EMPRESARIAL */}
         {canBusinessManagement && (
@@ -219,7 +271,8 @@ const Sidebar = () => {
             title="Gestión Empresarial"
             icon={<icon.iconMaleta className={style.iconMaleta} />}
             open={businessManagementOpen}
-            onToggle={() => setBusinessManagementOpen((v) => !v)}
+            onToggle={toggleModulo(setBusinessManagementOpen)}
+            collapsed={collapsed}
           >
             {/* SECCIÓN: PERSONAL */}
             <Collapsible
@@ -261,7 +314,7 @@ const Sidebar = () => {
             </NavLink>
           </Collapsible>
         )}
-        
+
         {/* EXTENSIONES */}
         {tieneAlgunModulo && extensions.length > 0 && (
           <Collapsible
@@ -269,7 +322,8 @@ const Sidebar = () => {
             title="Extensiones"
             icon={<icon.iconExtension className={style.iconMaleta} />}
             open={extensionsOpen}
-            onToggle={() => setExtensionsOpen((v) => !v)}
+            onToggle={toggleModulo(setExtensionsOpen)}
+            collapsed={collapsed}
           >
             {extensions.map((ext) => (
               <NavLink
@@ -291,7 +345,8 @@ const Sidebar = () => {
             title="Gestión Digital"
             icon={<icon.iconGestionDigital className={style.iconMaleta} />}
             open={digitalManagementOpen}
-            onToggle={() => setDigitalManagementOpen((v) => !v)}
+            onToggle={toggleModulo(setDigitalManagementOpen)}
+            collapsed={collapsed}
           >
             <NavLink to="/web" className={navClass}>
               <icon.iconGlobo className={style.iconSub} />
@@ -315,26 +370,26 @@ const Sidebar = () => {
         {/* MAPA */}
         {tieneAlgunModulo && (
           <p className={style.tituloSeccion}>
-            <NavLink to="/map" className={style.tituloSeccion}>
+            <NavLink to="/map" className={style.tituloSeccion} title="Mapa">
               <icon.iconMapa className={style.iconMaleta} />
-              Mapa
+              <span className={style.label}>Mapa</span>
             </NavLink>
           </p>
         )}
 
         {/* ANUNCIO */}
         {tieneAlgunModulo && (
-          <p className={style.tituloSeccion}>
+          <p className={style.tituloSeccion} title="Anuncio">
             <icon.iconAnuncio className={style.iconMaleta} />
-            <b>Anuncio</b>
+            <b className={style.label}>Anuncio</b>
           </p>
         )}
 
         {/* CONFIGURACIÓN */}
         {tieneAlgunModulo && (
-          <p className={style.tituloSeccion}>
+          <p className={style.tituloSeccion} title="Configuración">
             <icon.iconConfiguracion className={style.iconMaleta} />
-            <b>Configuración</b>
+            <b className={style.label}>Configuración</b>
           </p>
         )}
       </section>
