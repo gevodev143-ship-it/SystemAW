@@ -8,9 +8,8 @@ export default function MainLayout() {
       
       <Sidebar />
 
-      <main style={{  backgroundColor: "#EFF2F3",flex: 1, overflow: "auto" }}>
+      <main style={{ backgroundColor: "#EFF2F3", flex: 1, minWidth: 0, overflow: "auto", margin: 0, padding: 0 }}>
         <BarraSuperior />
-
         <Outlet />
       </main>
 
