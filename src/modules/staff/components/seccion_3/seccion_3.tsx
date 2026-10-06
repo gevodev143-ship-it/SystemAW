@@ -217,12 +217,15 @@ const Seccion_3 = ({ filtros }: Seccion3Props) => {
         </>
       )}
 
+      
       {staffFoto && custNameBucket && (
         <ModalFoto
           urlImagen={obtenerUrlImagenStaff(staffFoto.stff_link_img)}
           nombreCompleto={`${staffFoto.stff_name} ${staffFoto.stff_lastname}`}
           staffId={staffFoto.stff_id}
           stffName={staffFoto.stff_name}
+          stffLastname={staffFoto.stff_lastname}
+          stffCargo={staffFoto.job_position_customers?.jb_pstn_cust_name ?? null}
           stffDni={staffFoto.stff_dni}
           custNameBucket={custNameBucket}
           onClose={() => setStaffFoto(null)}

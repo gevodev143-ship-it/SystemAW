@@ -4,9 +4,9 @@ import {
   updateStaff,
   listAllStaffByCustomer,
   obtenerCargosPorCliente,
-} from "../../../services/";
-import type { Staff } from "../../../types/staff.type";
-import type { JobPositionCustomer } from "../../../types/job-position.type";
+} from "../../../../../core/services";
+import type { Staff } from "../../../../../core/types";
+import type { JobPositionCustomer } from "../../../../../core/types";
 
 interface ModalEditarStaffProps {
   staff: Staff;

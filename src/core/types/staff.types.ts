@@ -1,4 +1,4 @@
-import type { JobPositionCustomer, RoleCustomer } from "./";
+import type { JobPositionCustomer, RoleCustomer } from ".";
 
 /** Fila de la tabla `staffs`. */
 export interface Staff {

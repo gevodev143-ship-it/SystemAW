@@ -3,7 +3,7 @@ import { useAuth } from "../../../core/contexts/auth.context";
 import { listStaff, setStaffActive, getStaffImageUrl } from "../../../core/services";
 import type { StaffFilters, StaffListItem } from "../../../core/types";
 
-const ITEMS_POR_PAGINA = 5;
+const ITEMS_POR_PAGINA = 4;
 const RETARDO_BUSQUEDA_MS = 300;
 
 export const FILTROS_STAFF_INICIALES: StaffFilters = {

@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../../lib/supabase";
 import { useAuth } from "../../../../core/contexts/auth.context";
-import { getStaffImageUrl } from "../../../staff/services/staff.service";
+import { getStaffImageUrl } from "../../../../core/services/staff.service";
 import style from "./seccion_3.module.css";
-import Modal from "./modal";
+import Modal from "./shared/modal";
 
 interface StaffAttendance {
   att_id: number;
@@ -130,7 +130,7 @@ const Seccion_3 = () => {
 
   return (
     <div className={style.seccion}>
-      <h2>Asistencia de hoy ({totalRegistrados})</h2>
+      
 
       {attendance.length === 0 ? (
         <p>No hay registros de asistencia para el día de hoy.</p>

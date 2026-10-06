@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import style from "./BarraSuperior.module.css";
 import { icon } from "../../../../core/icons";
 import Modal from "./modal";
+import { useEffect } from "react";
+import { obtenerCustomerActual, type Customer } from "../../../../core/services/customer.service";
 
 export default function BarraSuperior() {
   const location = useLocation();
@@ -16,6 +18,16 @@ export default function BarraSuperior() {
   const [mostrarRoles, setMostrarRoles] = useState(false);
   const [mostrarEstados, setMostrarEstados] = useState(false);
 
+  const [customer, setCustomer] = useState<Customer | null>(null);
+
+  useEffect(() => {
+    async function cargarCustomer() {
+      const data = await obtenerCustomerActual();
+      setCustomer(data);
+    }
+
+    cargarCustomer();
+  }, []);
   return (
     <>
       <div className={style.barrasuperior}>
@@ -24,17 +36,16 @@ export default function BarraSuperior() {
         <div>
           {isStaffs && (
             <div className={style.seccionInfo}>
-              <button
+              {/* <button
                 className={style.botonMenu}
                 aria-label="Abrir menú"
                 onClick={() => setModalAbierto(true)}
               >
                 <icon.iconMenu className={style.iconHamburguesa} />
-              </button>
+              </button> */}
               <icon.iconUsers className={style.iconUsers} />
               <div>
-                <h2>Personales</h2>
-                <span>Gestiona la información de tus personales</span>
+                <h2>Personal</h2>
               </div>
             </div>
           )}
@@ -47,7 +58,6 @@ export default function BarraSuperior() {
               <icon.iconOrganigrama className={style.iconUsers} />
               <div>
                 <h2>Organigrama</h2>
-                <span>Visualiza la jerarquia del personal</span>
               </div>
             </div>
           )}
@@ -60,7 +70,6 @@ export default function BarraSuperior() {
               <icon.iconCargo className={style.iconUsers} />
               <div>
                 <h2>Cargos</h2>
-                <span>Visualiza los cargos del personal</span>
               </div>
             </div>
           )}
@@ -73,7 +82,6 @@ export default function BarraSuperior() {
               <icon.iconRol className={style.iconUsers} />
               <div>
                 <h2>Roles</h2>
-                <span>Visualiza los roles del personal</span>
               </div>
             </div>
           )}
@@ -86,7 +94,6 @@ export default function BarraSuperior() {
               <icon.iconAsistencia className={style.iconUsers} />
               <div>
                 <h2>Asistencia</h2>
-                <span>Gestiona la información de la asistencia</span>
               </div>
             </div>
           )}
@@ -97,11 +104,24 @@ export default function BarraSuperior() {
           <icon.iconBell className={style.iconUsers} />
 
           <div className={style.circulo}>
-            <icon.iconUser className={style.iconUser} />
+            {customer?.cust_name_img_link ? (
+              <img
+                src={customer.cust_name_img_link}
+                alt={`${customer.cust_name} ${customer.cust_lastname}`}
+                className={style.imagenUsuario}
+              />
+            ) : (
+              <icon.iconUser className={style.iconUser} />
+            )}
           </div>
 
           <div className={style.datosUsuario}>
-            <p>David Jhunior</p>
+            <p>
+              {customer
+                ? `${customer.cust_name} ${customer.cust_lastname}`
+                : "Cargando..."}
+            </p>
+
             <p>Administrador</p>
           </div>
 

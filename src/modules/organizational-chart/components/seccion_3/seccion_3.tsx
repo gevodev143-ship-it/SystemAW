@@ -4,7 +4,7 @@ import { jsPDF } from "jspdf";
 import style from "./seccion_3.module.css";
 import { supabase } from "../../../../lib/supabase";
 import { useAuth } from "../../../../core/contexts/auth.context";
-import { getStaffImageUrl } from "../../../staff/services/staff.service";
+import { getStaffImageUrl } from "../../../../core/services/staff.service";
 
 // Escala mínima para que el texto siga siendo legible.
 // Si el organigrama no cabe ni así, el lienzo hace scroll horizontal.

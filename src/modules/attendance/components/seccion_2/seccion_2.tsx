@@ -5,10 +5,8 @@ const Seccion_2 = () => {
 
   return (
     <div className={style.seccion}>
-      <button>
-        Hacer reporte
-      </button>
-
+      {/* filtros. por defecto hoy dia(quiero que halla la opcion de poner cualquier fecha , tambien de filtrar por dni o nombre ) */}
+<h2>ffdf</h2>
     </div>
   );
 };

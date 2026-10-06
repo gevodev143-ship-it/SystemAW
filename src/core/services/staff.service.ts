@@ -6,7 +6,7 @@ import type {
   StaffInsert,
   StaffListItem,
   StaffUpdate,
-} from "../types/staff.type";
+} from "../types/staff.types";
 
 const TABLA = "staffs";
 const RUTA_IMAGENES = "gestion_empresarial/personal/personal_img";
@@ -218,4 +218,22 @@ export const uploadStaffImage = async (
   }
 
   return nombreArchivo;
+};
+
+export const listAllStaffByCustomer = async (
+  custId: number
+): Promise<Pick<Staff, "stff_id" | "stff_name" | "stff_lastname">[]> => {
+  const { data, error } = await supabase
+    .from("staffs")
+    .select("stff_id, stff_name, stff_lastname")
+    .eq("cust_id", custId)
+    .eq("stff_active", true)
+    .order("stff_name", { ascending: true });
+
+  if (error) {
+    console.error("Error al listar todo el personal:", error);
+    throw error;
+  }
+
+  return data ?? [];
 };

@@ -3,13 +3,13 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    margin: 0px 20px 20px 20px;
+    margin: 20px 20px 20px 20px;
     font-family: "Inter", sans-serif;
 }
 
 h2{
-    font-family: "Inter", sans-serif;
-    color: #0B1A4C;
+     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #0f172a;
 }
 
 .boton {
@@ -20,7 +20,7 @@ h2{
     margin-top: 23px;
     padding: 10px 18px;
 
-    background-color: #777F87;
+    background-color: #1F2E45;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -41,7 +41,8 @@ h2{
     align-items: center;
     font-size: 16px;
 }
-p{
-    color: #8a8989 ;
-    font-family: "Inter", sans-serif;
+.seccion p{
+   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+   color: #0f172a;
+   
 }

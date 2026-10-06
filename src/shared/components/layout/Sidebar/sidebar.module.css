@@ -1,28 +1,24 @@
+/* =========================================================
+   SIDEBAR · tema oscuro
+   (todos los colores salen de las variables de abajo)
+   ========================================================= */
 .sidebar {
+  --sb-bg: #16253c;
+  --sb-text: #d5dded;
+  --sb-text-strong: #ffffff;
+  --sb-line: rgba(255, 255, 255, 0.12);
+  --sb-hover: rgba(255, 255, 255, 0.07);
+  --sb-active: rgba(255, 255, 255, 0.12);
+  --sb-focus: #7aa2ff;
+
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   width: 230px;
   height: 100vh;
-  background-color: #fff;
-  border-right: 1px solid #e0e0e0;
-  font-family: Arial, Helvetica, sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* --- Logo --- */
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  width: 230px;
-  height: 100vh;
-  background-color: #fff;
-  border-right: 1px solid #e0e0e0;
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--sb-bg);
+  border-right: 1px solid var(--sb-line);
+  font-family: "Inter", "Segoe UI", system-ui, Arial, sans-serif;
   white-space: nowrap;
   overflow: hidden;
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -34,14 +30,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 12px;
-  border-bottom: 1px solid #e0e0e0;
-  color: #858484;
+  border-bottom: 1px solid var(--sb-line);
 }
 
 .nombre {
   font-size: 14px;
   font-weight: 700;
-  color: #555;
+  color: var(--sb-text-strong);
 }
 
 .acciones {
@@ -57,19 +52,262 @@
   padding: 6px;
   background: none;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  color: #555;
+  color: var(--sb-text-strong);
   transition: background-color 0.15s ease;
 }
 
 .botonIcono:hover {
-  background-color: #f2f2f2;
+  background-color: var(--sb-hover);
+}
+
+.botonIcono:focus-visible {
+  outline: 2px solid var(--sb-focus);
+  outline-offset: 1px;
 }
 
 .iconAccion {
   width: 18px;
   height: 18px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  max-width: 60px;
+  height: auto;
+  display: block;
+}
+
+/* --- Navegación --- */
+.seccion2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 10px;
+  overflow-y: auto;
+}
+
+/* Títulos de módulo (GESTIÓN EMPRESARIAL, MAPA, ANUNCIO…) */
+.seccion2 p {
+  margin: 16px 10px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sb-text);
+}
+
+.seccion2 p:first-child {
+  margin-top: 4px;
+}
+
+.seccion2 p b {
+  font-weight: 600;
+}
+
+.tituloSeccion {
+  display: flex;
+  align-items: center;
+}
+
+.tituloClickable {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.tituloClickable:hover {
+  color: var(--sb-text-strong);
+}
+
+.tituloClickable:focus-visible {
+  outline: 2px solid var(--sb-focus);
+  outline-offset: 2px;
+}
+
+/* NavLink que se ve como título (MAPA) */
+.tituloLink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.tituloLink:hover,
+.tituloLinkActivo {
+  color: var(--sb-text-strong);
+}
+
+/* --- Iconos --- */
+.iconMaleta {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.iconSub {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* --- Links --- */
+.link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sb-text);
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.link:hover {
+  background-color: var(--sb-hover);
+  color: var(--sb-text-strong);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--sb-focus);
+  outline-offset: 1px;
+}
+
+.linkActivo,
+.linkActivo:hover {
+  background-color: var(--sb-active);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--sb-text-strong);
+  font-weight: 600;
+}
+
+/* --- Cabecera de sección anidada (Personal, Asistencia): parece un link --- */
+.tituloNested {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sb-text);
+}
+
+.tituloNested:hover {
+  background-color: var(--sb-hover);
+  color: var(--sb-text-strong);
+}
+
+/* --- Flecha --- */
+.botonArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 4px;
+}
+
+.iconArrowDown {
+  width: 16px;
+  height: 16px;
+  color: inherit; /* antes era #000: no se veía sobre fondo oscuro */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.iconArrowDownOpen {
+  transform: rotate(180deg);
+}
+
+/* --- Submenú animado (módulo y secciones anidadas) --- */
+.submenu {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden; /* evita que los links ocultos reciban foco con Tab */
+  transition:
+    grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease,
+    visibility 0s linear 0.3s;
+}
+
+.submenuOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease,
+    visibility 0s linear 0s;
+}
+
+.submenuInner {
+  min-height: 0;
+  overflow: hidden;
+  padding-left: 12px;
+}
+
+/* Cada hijo baja con retraso escalonado (">" para afectar solo al nivel propio) */
+.submenu > .submenuInner > * {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.submenuOpen > .submenuInner > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.submenuOpen > .submenuInner > *:nth-child(1) { transition-delay: 0.04s; }
+.submenuOpen > .submenuInner > *:nth-child(2) { transition-delay: 0.08s; }
+.submenuOpen > .submenuInner > *:nth-child(3) { transition-delay: 0.12s; }
+.submenuOpen > .submenuInner > *:nth-child(4) { transition-delay: 0.16s; }
+.submenuOpen > .submenuInner > *:nth-child(5) { transition-delay: 0.2s; }
+.submenuOpen > .submenuInner > *:nth-child(6) { transition-delay: 0.24s; }
+
+/* Guía vertical de los sub-links de una sección anidada */
+.submenu .submenu > .submenuInner {
+  margin-left: 14px;
+  padding-left: 8px;
+  border-left: 1px solid var(--sb-line);
+}
+
+/* --- Scrollbar discreto --- */
+.seccion2::-webkit-scrollbar {
+  width: 6px;
+}
+
+.seccion2::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+}
+
+.seccion2::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 
 /* --- Modo colapsado --- */
@@ -108,303 +346,10 @@
 .collapsed .iconMaleta {
   margin-right: 0;
 }
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.logo img {
-  max-width: 60px;
-  height: auto;
-  display: block;
-}
-
-/* --- Navegación --- */
-
-.seccion2 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 14px 10px;
-  overflow-y: auto;
-}
-
-.seccion2 p {
-  margin: 16px 10px 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #999;
-}
-
-.seccion2 p:first-child {
-  margin-top: 4px;
-}
-
-.seccion2 p b {
-  font-weight: 700;
-}
-
-/* --- Links --- */
-
-.link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  margin-bottom: 2px;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #555;
-  text-decoration: none;
-  border: 1px solid transparent;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.link:hover {
-  background-color: #f9f9f9;
-  border-color: #e0e0e0;
-  color: #222;
-}
-
-.linkActivo,
-.linkActivo:hover {
-  background-color: #e8eef7;
-  border-color: #cddaf0;
-  color: #2b5aa0;
-  font-weight: 600;
-}
-
-/* --- Scrollbar discreto --- */
-
-.seccion2::-webkit-scrollbar {
-  width: 6px;
-}
-
-.seccion2::-webkit-scrollbar-thumb {
-  background-color: #e0e0e0;
-  border-radius: 4px;
-}
-
-.seccion2::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-/* --- Título de sección --- */
-
-.tituloSeccion {
-  display: flex;
-  align-items: center;
-  /* sin width:100% : con los márgenes del p desbordaba el sidebar */
-  color: #999999;
-}
-
-.tituloClickable {
-  cursor: pointer;
-  user-select: none;
-  border-radius: 4px;
-  transition: color 0.15s ease;
-}
-
-.tituloClickable:hover {
-  color: #555;
-}
-
-.tituloClickable:focus-visible {
-  outline: 2px solid #2b5aa0;
-  outline-offset: 2px;
-}
-
-/* --- Icono maleta (icono de título) --- */
-
-.iconMaleta {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-
-/* --- Icono de los sub-links (unifica iconGlobo e iconGlobo1) --- */
-
-.iconSub {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
-/* --- Flecha --- */
-
-.botonArrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  padding: 4px;
-}
-
-.iconArrowDown {
-  width: 16px;
-  height: 16px;
-  color: #000;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Al abrir gira horario; al cerrar vuelve antihorario */
-.iconArrowDownOpen {
-  transform: rotate(180deg);
-}
-
-/* --- Submenú animado --- */
-
-.submenu {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  visibility: hidden; /* evita que los links ocultos reciban foco con Tab */
-  transition:
-    grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.25s ease,
-    visibility 0s linear 0.3s; /* se oculta al terminar de cerrar */
-}
-
-.submenuOpen {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  visibility: visible;
-  transition:
-    grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.25s ease,
-    visibility 0s linear 0s;
-}
-
-.submenuInner {
-  min-height: 0;
-  overflow: hidden;
-  padding-left: 12px; /* sangría de los sub-links */
-}
-
-/* Cada link baja con un pequeño retraso escalonado */
-.submenuInner > * {
-  opacity: 0;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.25s ease,
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.submenuOpen .submenuInner > * {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.submenuOpen .submenuInner > *:nth-child(1) { transition-delay: 0.04s; }
-.submenuOpen .submenuInner > *:nth-child(2) { transition-delay: 0.08s; }
-.submenuOpen .submenuInner > *:nth-child(3) { transition-delay: 0.12s; }
-.submenuOpen .submenuInner > *:nth-child(4) { transition-delay: 0.16s; }
-.submenuOpen .submenuInner > *:nth-child(5) { transition-delay: 0.2s; }
-.submenuOpen .submenuInner > *:nth-child(6) { transition-delay: 0.24s; }
-
-/* Respeta a quien tiene animaciones reducidas en el sistema */
+/* --- Respeta a quien tiene animaciones reducidas en el sistema --- */
 @media (prefers-reduced-motion: reduce) {
-  .submenu,
-  .submenuOpen,
-  .submenuInner > *,
-  .iconArrowDown {
-    transition: none !important;
-  }
-}
-/* --- Submenú animado (sirve para módulo y para secciones anidadas) --- */
-
-.submenu {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.25s ease,
-    visibility 0s linear 0.3s;
-}
-
-.submenuOpen {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  visibility: visible;
-  transition:
-    grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.25s ease,
-    visibility 0s linear 0s;
-}
-
-.submenuInner {
-  min-height: 0;
-  overflow: hidden;
-  padding-left: 12px;
-}
-
-/* Cada hijo baja con retraso escalonado.
-   Se usa ">" en toda la cadena para que solo afecte al nivel propio */
-.submenu > .submenuInner > * {
-  opacity: 0;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.25s ease,
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.submenuOpen > .submenuInner > * {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.submenuOpen > .submenuInner > *:nth-child(1) { transition-delay: 0.04s; }
-.submenuOpen > .submenuInner > *:nth-child(2) { transition-delay: 0.08s; }
-.submenuOpen > .submenuInner > *:nth-child(3) { transition-delay: 0.12s; }
-.submenuOpen > .submenuInner > *:nth-child(4) { transition-delay: 0.16s; }
-.submenuOpen > .submenuInner > *:nth-child(5) { transition-delay: 0.2s; }
-.submenuOpen > .submenuInner > *:nth-child(6) { transition-delay: 0.24s; }
-
-/* --- Cabecera de sección anidada (Personal): se ve como un link --- */
-
-.tituloNested {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  margin-bottom: 2px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #555;
-}
-
-.tituloNested:hover {
-  background-color: #f9f9f9;
-  border-color: #e0e0e0;
-  color: #222;
-}
-
-/* Guía vertical y sangría de los sub-links de la sección */
-.submenu .submenu > .submenuInner {
-  margin-left: 14px;
-  padding-left: 8px;
-  border-left: 1px solid #e0e0e0;
-}
-
-@media (prefers-reduced-motion: reduce) {
+  .sidebar,
   .submenu,
   .submenuOpen,
   .submenu > .submenuInner > *,

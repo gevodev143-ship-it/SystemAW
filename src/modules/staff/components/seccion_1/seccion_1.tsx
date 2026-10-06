@@ -13,13 +13,13 @@ const Seccion_1 = () => {
     <div className={style.seccion}>
 
       <div>
-        <h2><b>Listado de Personales</b></h2>
-        <p>Administra y organiza la información de tu personal, cargos, roles y estado laboral desde un solo lugar.</p>
+        <h2><b>Lista de Personal</b></h2>
+        <p>Administra y organiza la información de tu personal, cargos, roles y estado laboral de manera centralizada.</p>
       </div>
       
       <div>
         <button className={style.boton} onClick={() => setShowModal(true)}>
-          <span className={style.icono}>⊕</span> Crear Personal
+          <span className={style.icono}>⊕</span> Nuevo Registro
         </button>
       </div>
 

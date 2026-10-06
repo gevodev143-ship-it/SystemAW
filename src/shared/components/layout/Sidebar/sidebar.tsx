@@ -1,4 +1,11 @@
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useState,
+  type Dispatch,
+  type KeyboardEvent,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import style from "./sidebar.module.css";
 import { supabase } from "../../../../lib/supabase";
@@ -9,9 +16,13 @@ interface ExtensionMenuItem {
   extns_name: string;
 }
 
-// Clase compartida para todos los NavLink
+// Clase compartida para los links de sub-menú
 const navClass = ({ isActive }: { isActive: boolean }) =>
   isActive ? `${style.link} ${style.linkActivo}` : style.link;
+
+// Clase para los links que se ven como título (ej. Mapa)
+const tituloLinkClass = ({ isActive }: { isActive: boolean }) =>
+  isActive ? `${style.tituloLink} ${style.tituloLinkActivo}` : style.tituloLink;
 
 type CollapsibleProps = {
   id: string;
@@ -46,7 +57,7 @@ const Collapsible = ({
     "aria-expanded": open,
     "aria-controls": id,
     onClick: onToggle,
-    onKeyDown: (e: React.KeyboardEvent) => {
+    onKeyDown: (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         onToggle();
@@ -102,12 +113,13 @@ const Sidebar = () => {
   const [digitalManagementOpen, setDigitalManagementOpen] = useState(false);
 
   const [personalOpen, setPersonalOpen] = useState(false);
+  const [asistenciaOpen, setAsistenciaOpen] = useState(false);
 
   const [collapsed, setCollapsed] = useState(false);
 
   // Si está colapsado, al pulsar un módulo se expande y se abre ese módulo
   const toggleModulo =
-    (setter: React.Dispatch<React.SetStateAction<boolean>>) => () => {
+    (setter: Dispatch<SetStateAction<boolean>>) => () => {
       if (collapsed) {
         setCollapsed(false);
         setter(true);
@@ -193,7 +205,7 @@ const Sidebar = () => {
         {collapsed ? (
           <>
             <div className={style.logo}>
-              <img src="/logo.png" alt="System AW" />
+              <img src="/logo.png" alt="Distribuidora Ferretera Gorrioncito" />
             </div>
             <button
               type="button"
@@ -206,7 +218,7 @@ const Sidebar = () => {
           </>
         ) : (
           <>
-            <span className={style.nombre}>System AW</span>
+            <span className={style.nombre}>GORRIONCITO</span>
             <div className={style.acciones}>
               <button
                 type="button"
@@ -285,11 +297,15 @@ const Sidebar = () => {
             >
               <NavLink to="/staffs" className={navClass}>
                 <icon.iconUsers className={style.iconSub} />
-                Lista de personal
+                Lista
               </NavLink>
               <NavLink to="/organizational-chart" className={navClass}>
                 <icon.iconOrganigrama className={style.iconSub} />
                 Organigrama
+              </NavLink>
+              <NavLink to="/fotocheck" className={navClass}>
+                <icon.iconCargo className={style.iconSub} />
+                Fotocheck
               </NavLink>
               <NavLink to="/job-position" className={navClass}>
                 <icon.iconUser className={style.iconSub} />
@@ -302,12 +318,21 @@ const Sidebar = () => {
             </Collapsible>
 
             {/* SECCIÓN: ASISTENCIA */}
-            <NavLink to="/attendances" className={navClass}>
-              <icon.iconAsistencia className={style.iconSub} />
-              Asistencia
-            </NavLink>
+            <Collapsible
+              nested
+              id="submenu-asistencia" /* antes repetía "submenu-personal" */
+              title="Asistencia"
+              icon={<icon.iconAsistencia className={style.iconSub} />}
+              open={asistenciaOpen}
+              onToggle={() => setAsistenciaOpen((v) => !v)}
+            >
+              <NavLink to="/attendances" className={navClass}>
+                <icon.iconAsistencia className={style.iconSub} />
+                Registro de asistencia
+              </NavLink>
+            </Collapsible>
 
-            {/* SECCIÓN: ALMACENAMIENTO */}
+            {/* ALMACENAMIENTO (link directo, al mismo nivel que Personal y Asistencia) */}
             <NavLink to="/logos" className={navClass}>
               <icon.iconCarpeta className={style.iconSub} />
               Almacenamiento
@@ -370,7 +395,7 @@ const Sidebar = () => {
         {/* MAPA */}
         {tieneAlgunModulo && (
           <p className={style.tituloSeccion}>
-            <NavLink to="/map" className={style.tituloSeccion} title="Mapa">
+            <NavLink to="/map" className={tituloLinkClass} title="Mapa">
               <icon.iconMapa className={style.iconMaleta} />
               <span className={style.label}>Mapa</span>
             </NavLink>

@@ -1,8 +1,8 @@
 import { useEffect, useId, useState } from "react";
 import style from "../../seccion_3/shared/modalEditarStaff.module.css";
-import { createStaff } from "../../../services/staff.service";
-import { obtenerCargosPorCliente } from "../../../services/job_position_customers.service";
-import type { JobPositionCustomer } from "../../../types/job-position.type";
+import { createStaff } from "../../../../../core/services";
+import { obtenerCargosPorCliente } from "../../../../../core/services/job_position_customers.service";
+import type { JobPositionCustomer } from "../../../../../core/types/job-position.types";
 import { useAuth } from "../../../../../core/contexts/auth.context";
 
 interface ModalProps {

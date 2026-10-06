@@ -16,3 +16,5 @@ npm install --save-dev @types/react
 / creacion de qr 
 npm install react-qr-code html2canvas
 npm install jspdf
+
+npm i qrcode.react
