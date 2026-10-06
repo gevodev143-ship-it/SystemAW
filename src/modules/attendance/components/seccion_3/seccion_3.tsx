@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../../lib/supabase";
 import { useAuth } from "../../../../core/contexts/auth.context";
@@ -116,7 +116,7 @@ const Seccion_3 = () => {
     };
   }, [custId, fetchAttendance]);
 
-  const totalRegistrados = useMemo(() => attendance.length, [attendance]);
+  // const totalRegistrados = useMemo(() => attendance.length, [attendance]);
 
   // El loading cubre tanto la carga de sesión/customer (loadingAuth)
   // como la carga de asistencia (loadingAttendance)
