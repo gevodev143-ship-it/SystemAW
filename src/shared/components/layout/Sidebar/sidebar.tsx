@@ -203,19 +203,21 @@ const Sidebar = () => {
       {/* CABECERA */}
       <section className={style.seccion1}>
         {collapsed ? (
-          <>
-            <div className={style.logo}>
-              <img src="/logo.png" alt="Distribuidora Ferretera Gorrioncito" />
-            </div>
-            <button
-              type="button"
-              className={style.botonIcono}
-              onClick={() => setCollapsed(false)}
-              aria-label="Expandir menú"
-            >
-              <icon.iconPanelDistribution className={style.iconAccion} />
-            </button>
-          </>
+          <button
+            type="button"
+            className={style.botonLogo}
+            onClick={() => setCollapsed(false)}
+            aria-label="Expandir menú"
+          >
+            <img
+              className={style.logoImg}
+              src="/1791206922783.png"
+              alt="Distribuidora Ferretera Gorrioncito"
+            />
+            <icon.iconPanelDistribution
+              className={`${style.iconAccion} ${style.iconExpandir}`}
+            />
+          </button>
         ) : (
           <>
             <span className={style.nombre}>GORRIONCITO</span>
@@ -328,7 +330,7 @@ const Sidebar = () => {
             >
               <NavLink to="/attendances" className={navClass}>
                 <icon.iconAsistencia className={style.iconSub} />
-                Registro de asistencia
+                Registro
               </NavLink>
             </Collapsible>
 

@@ -3,9 +3,10 @@ import type {
   Staff,
   StaffCargoResumen,
   StaffFilters,
-  StaffInsert,
+  // StaffInsert,
   StaffListItem,
   StaffUpdate,
+  CreateStaffPayload
 } from "../types/staff.types";
 
 const TABLA = "staffs";
@@ -57,19 +58,24 @@ const dividirBusqueda = (texto: string = ""): string[] =>
 // ---------------------------------------------------------------------------
 // CREAR
 // ---------------------------------------------------------------------------
-export const createStaff = async (staff: StaffInsert): Promise<Staff> => {
-  const { data, error } = await supabase
-    .from(TABLA)
-    .insert(staff)
-    .select(COLUMNAS_STAFF)
-    .single();
+
+export async function createStaff(payload: CreateStaffPayload) {
+  const { data, error } = await supabase.functions.invoke("staff-crud", {
+    body: payload,
+  });
 
   if (error) {
-    console.error("Error al crear personal:", error);
-    throw error;
+    // Si el servidor respondió con { error: "..." }, se muestra ese mensaje
+    let mensaje: string | undefined;
+    try {
+      mensaje = (await error.context.json()).error;
+    } catch {
+      /* sin cuerpo legible */
+    }
+    throw new Error(mensaje ?? error.message);
   }
-  return data as Staff;
-};
+  return data.staff;
+}
 
 // ---------------------------------------------------------------------------
 // ACTUALIZAR
@@ -236,4 +242,33 @@ export const listAllStaffByCustomer = async (
   }
 
   return data ?? [];
+};
+
+// ---------------------------------------------------------------------------
+// CANDIDATOS A JEFE DIRECTO (sin paginar, solo activos, con cargo)
+// ---------------------------------------------------------------------------
+export const listSupervisorCandidates = async (
+  custId: number
+): Promise<StaffListItem[]> => {
+  const { data, error } = await supabase
+    .from(TABLA)
+    .select(SELECT_LISTADO)
+    .eq("cust_id", custId)
+    .eq("stff_active", true)
+    .order("stff_name", { ascending: true });
+
+  if (error) {
+    console.error("Error al listar posibles jefes:", error);
+    throw error;
+  }
+
+  return (data ?? []).map((fila) => {
+    const cargo = fila.job_position_customers as unknown;
+    return {
+      ...fila,
+      job_position_customers: Array.isArray(cargo)
+        ? ((cargo[0] as StaffCargoResumen | undefined) ?? null)
+        : ((cargo as StaffCargoResumen | null) ?? null),
+    };
+  });
 };

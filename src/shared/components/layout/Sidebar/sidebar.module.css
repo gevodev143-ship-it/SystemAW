@@ -72,18 +72,6 @@
   height: 18px;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo img {
-  max-width: 60px;
-  height: auto;
-  display: block;
-}
-
 /* --- Navegación --- */
 .seccion2 {
   flex: 1;
@@ -322,9 +310,6 @@
   padding: 14px 6px;
 }
 
-.collapsed .logo img {
-  max-width: 36px;
-}
 
 .collapsed .seccion2 {
   align-items: center;
@@ -356,4 +341,52 @@
   .iconArrowDown {
     transition: none !important;
   }
+}
+/* --- Botón logo (modo colapsado): el logo se cambia por el icono al hover --- */
+.botonLogo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--sb-text-strong);
+  transition: background-color 0.15s ease;
+}
+
+.botonLogo:hover {
+  background-color: var(--sb-hover);
+}
+
+.botonLogo:focus-visible {
+  outline: 2px solid var(--sb-focus);
+  outline-offset: 1px;
+}
+
+.logoImg {
+  max-width: 32px;
+  height: auto;
+  display: block;
+  transition: opacity 0.15s ease;
+}
+
+.iconExpandir {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.botonLogo:hover .logoImg,
+.botonLogo:focus-visible .logoImg {
+  opacity: 0;
+}
+
+.botonLogo:hover .iconExpandir,
+.botonLogo:focus-visible .iconExpandir {
+  opacity: 1;
 }

@@ -188,23 +188,7 @@ const ModalFoto = ({
             </p>
           )}
 
-          <button
-            onClick={onClose}
-            style={{
-              position: "absolute",
-              top: -14,
-              right: -14,
-              width: 28,
-              height: 28,
-              borderRadius: "50%",
-              border: "none",
-              background: "#fff",
-              cursor: "pointer",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-            }}
-          >
-            ✕
-          </button>
+
         </div>
       </div>
     );

@@ -32,12 +32,17 @@ import { iconMenu } from "./menu";
 import { iconLogo } from "./logo";
 import { iconCarpeta } from "./carpeta";
 import { iconPanelDistribution } from "./panel-distribution";
+import { iconUserPlus } from "./iconUserPlus";
+import { iconEyeOff } from "./iconEyeOff";
+import { iconEye } from "./iconEye";
+import { iconClose } from "./iconClose";
+import { iconCheck } from "./iconCheck";
 
 export const icon = {
   iconHojaPaper,
   iconTelefono,
   iconCorreo,
-  iconUbicacion,
+  iconUbicacion,        
   iconWhatsApp,
   iconCarrito,
   iconLupa,
@@ -68,4 +73,9 @@ export const icon = {
   iconLogo,
   iconCarpeta,
   iconPanelDistribution,
+  iconUserPlus,
+  iconEyeOff,
+  iconEye,
+  iconClose,
+  iconCheck
 };

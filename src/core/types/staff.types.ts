@@ -41,3 +41,14 @@ export interface StaffFilters {
   rolId: number | null;
   estado: EstadoFiltro;
 }
+
+export interface CreateStaffPayload {
+  stff_name: string;
+  stff_lastname: string;
+  stff_dni: string;
+  stff_phone: string | null;
+  jb_pstn_cust_id: number;
+  stff_supervisor_id: number;
+  con_acceso: boolean;
+  stff_password?: string;
+}
