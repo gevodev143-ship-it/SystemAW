@@ -37,6 +37,7 @@ import { iconEyeOff } from "./iconEyeOff";
 import { iconEye } from "./iconEye";
 import { iconClose } from "./iconClose";
 import { iconCheck } from "./iconCheck";
+import { iconCalendar } from "./calendar";
 
 export const icon = {
   iconHojaPaper,
@@ -77,5 +78,6 @@ export const icon = {
   iconEyeOff,
   iconEye,
   iconClose,
-  iconCheck
+  iconCheck,
+  iconCalendar
 };

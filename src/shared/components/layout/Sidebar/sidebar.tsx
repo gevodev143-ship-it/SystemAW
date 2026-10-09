@@ -394,6 +394,16 @@ const Sidebar = () => {
           </Collapsible>
         )}
 
+        {/* CALENDARIO */}
+        {tieneAlgunModulo && (
+          <p className={style.tituloSeccion}>
+            <NavLink to="/calendar" className={tituloLinkClass} title="Calendar">
+              <icon.iconCalendar className={style.iconMaleta} />
+              <span className={style.label}>Calendar</span>
+            </NavLink>
+          </p>
+        )}
+
         {/* MAPA */}
         {tieneAlgunModulo && (
           <p className={style.tituloSeccion}>

@@ -19,6 +19,7 @@ import RoleRoutes from "../../modules/role/routes/RoleRoutes";
 import Organizational_chartRoutes from "../../modules/organizational-chart/routes/Organizational-chartRoutes";
 import FotocheckRoutes from "../../modules/fotocheck/routes/FotocheckRoutes";
 import LogoRoutes from "../../modules/logo/routes/LogoRoutes";
+import CalendarRoutes from "../../modules/calendar/routes/CalendarRoutes";
 
 
 export default function AppRoutes() {
@@ -51,16 +52,14 @@ export default function AppRoutes() {
                             {Organizational_chartRoutes}
                             {FotocheckRoutes}
                             {LogoRoutes}
+                            {RoleRoutes}
+                            {Organizational_chartRoutes}                              
+                            {CalendarRoutes}
                         </Route>
                     </Route>
 
-                    <Route element={<MainLayout />}>
-                        {RoleRoutes}
-                    </Route>
-
-                    <Route element={<MainLayout />}>
-                        {Organizational_chartRoutes}
-                    </Route>
+             
+               
 
 
                     {/* ==================== RUTA POR DEFECTO ==================== */}
@@ -69,6 +68,7 @@ export default function AppRoutes() {
                         path="*"
                         element={<Navigate to="/" replace />}
                     />
+
 
                 </Routes>
             </AuthProvider>
